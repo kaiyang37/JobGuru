@@ -1,0 +1,106 @@
+{
+  "project_info": {
+    "project_number": "364549438702",
+    "firebase_url": "https://jobguru-f4633-default-rtdb.firebaseio.com",
+    "project_id": "jobguru-f4633",
+    "storage_bucket": "jobguru-f4633.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:364549438702:android:bc7f54db1f487f2d5747ff",
+        "android_client_info": {
+          "package_name": "com.example.backup"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA2lHLEZvajxmdLE2h-Yt123GyS3vOq4ZE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:364549438702:android:9ebc6e43ab2fd4a95747ff",
+        "android_client_info": {
+          "package_name": "com.example.jobguru"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA2lHLEZvajxmdLE2h-Yt123GyS3vOq4ZE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:364549438702:android:5e33f3e2a423b82d5747ff",
+        "android_client_info": {
+          "package_name": "com.example.jobgurutemp"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA2lHLEZvajxmdLE2h-Yt123GyS3vOq4ZE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:364549438702:android:e30bb8c6446b3f0a5747ff",
+        "android_client_info": {
+          "package_name": "com.example.jobgurutest"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA2lHLEZvajxmdLE2h-Yt123GyS3vOq4ZE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:364549438702:android:e695d8f0ed26b9455747ff",
+        "android_client_info": {
+          "package_name": "com.example.teststorage"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA2lHLEZvajxmdLE2h-Yt123GyS3vOq4ZE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
