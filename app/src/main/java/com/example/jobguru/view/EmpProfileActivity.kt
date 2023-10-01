@@ -1,19 +1,13 @@
 package com.example.jobguru.view
 
-import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import com.example.jobguru.R
-import com.example.jobguru.databinding.ActivityEmpApplicantsBinding
 import com.example.jobguru.databinding.ActivityEmpProfileBinding
-import com.example.jobguru.view.EmpEditProfileFragment
-import com.example.jobguru.view.EmpInterviewActivity
-import com.example.jobguru.view.EmpJobsActivity
-import com.example.jobguru.view.EmpNavigationFragment
 import com.example.jobguru.viewmodel.EmpProfileViewModel
 
 class EmpProfileActivity : AppCompatActivity() {
@@ -104,7 +98,11 @@ class EmpProfileActivity : AppCompatActivity() {
             val editor = sharedPreferences.edit()
             editor.clear()
             editor.apply()
-            //
+
+            val intent = Intent(this, RoleActivity::class.java)
+            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+            startActivity(intent)
+
             Toast.makeText(
                 this,
                 "Log Out Successfully",

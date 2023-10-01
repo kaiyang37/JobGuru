@@ -1,5 +1,206 @@
 <resources>
     <string name="app_name">JobGuru</string>
+    <string name="home_text">Home</string>
+    <string name="saved_jobs_text">Saved Jobs</string>
+    <string name="profile_text">Profile</string>
+    <string name="email_address_text">Email Address</string>
+    <string name="password_text">Password</string>
+    <string name="sign_up_text">Sign Up</string>
+    <string name="first_name_text">First Name</string>
+    <string name="last_name_text">Last Name</string>
+    <string name="log_in_text">Log in</string>
+    <string name="login_text">Login</string>
+    <string name="forgot_your_password_text">Forgot your password?</string>
+    <string name="locations_text">Locations</string>
+    <string name="continue_text">Continue</string>
+    <string name="johor_text">Johor</string>
+    <string name="kedah_text">Kedah</string>
+    <string name="kelantan_text">Kelantan</string>
+    <string name="kuala_lumpur_text">Kuala Lumpur</string>
+    <string name="melaka_text">Melaka</string>
+    <string name="negeri_sembilan_text">Negeri Sembilan</string>
+    <string name="pahang_text">Pahang</string>
+    <string name="penang_text">Penang</string>
+    <string name="perak_text">Perak</string>
+    <string name="perlis_text">Perlis</string>
+    <string name="sabah_text">Sabah</string>
+    <string name="sarawak_text">Sarawak</string>
+    <string name="selangor_text">Selangor</string>
+    <string name="terengganu_text">Terengganu</string>
+    <string name="step_1_of_3_text">Step 1 of 3</string>
+    <string name="appl_location_question">Where would you like to work in Malaysia? (Select up to 5)</string>
+    <string name="step_2_of_3_text">Step 2 of 3</string>
+    <string name="appl_spec_question">What kind of jobs are you looking for? (Select up to 5)</string>
+    <string name="specializations_text">Specializations</string>
+    <string name="accounting_finance_text">Accounting/Finance</string>
+    <string name="admin_hr_text">Admin/HR</string>
+    <string name="arts_media_text">Arts/Media</string>
+    <string name="building_construction_text">Building/Construction</string>
+    <string name="computer_it_text">Computer/IT</string>
+    <string name="services_text">Services</string>
+    <string name="sciences_text">Sciences</string>
+    <string name="sales_marketing_text">Sales/Marketing</string>
+    <string name="restaurant_text">Restaurant</string>
+    <string name="manufacturing_text">Manufacturing</string>
+    <string name="hotel_dormitory_text">Hotel/Dormitory</string>
+    <string name="healthcare_text">Healthcare</string>
+    <string name="engineering_text">Engineering</string>
+    <string name="education_training_text">Education/Training</string>
+    <string name="appl_salary_question">Lastly, what monthly salary are you looking for?</string>
+    <string name="salary_text">Salary</string>
+    <string name="minimum_text">Minimum</string>
+    <string name="step_3_of_3_text">Step 3 of 3</string>
+    <string name="complete_text">Complete</string>
+    <string name="recommended_jobs_text">Recommended Jobs</string>
+    <string name="search_text">Search</string>
+    <string name="application_history_text">Application History</string>
+    <string name="applicant_text">Applicant</string>
+    <string name="employer_text">Employer</string>
+    <string name="select_a_role_text">Select a Role</string>
+    <string name="select_a_role_to_continue_text">Select a role to continue</string>
+    <string name="explore_jobs_text">Explore jobs</string>
+    <string-array name="gender_spinner">
+        <item>Male</item>
+        <item>Female</item>
+    </string-array>
+    <string-array name="salary_spinner">
+        <item>MYR 0</item>
+        <item>MYR 500</item>
+        <item>MYR 1,000</item>
+        <item>MYR 1,500</item>
+        <item>MYR 2,000</item>
+        <item>MYR 2,500</item>
+        <item>MYR 3,000</item>
+        <item>MYR 3,500</item>
+        <item>MYR 4,000</item>
+        <item>MYR 4,500</item>
+        <item>MYR 5,000</item>
+        <item>MYR 5,500</item>
+        <item>MYR 6,000</item>
+        <item>MYR 6,500</item>
+        <item>MYR 7,000</item>
+        <item>MYR 7,500</item>
+        <item>MYR 8,000</item>
+        <item>MYR 8,500</item>
+        <item>MYR 9,000</item>
+        <item>MYR 9,500</item>
+        <item>MYR 10,000</item>
+    </string-array>
+    <string-array name="liveIn_spinner">
+        <item>Malaysia, Johor</item>
+        <item>Malaysia, Kedah</item>
+        <item>Malaysia, Kelantan</item>
+        <item>Malaysia, Kuala Lumpur</item>
+        <item>Malaysia, Melaka</item>
+        <item>Malaysia, Negeri Sembilan</item>
+        <item>Malaysia, Pahang</item>
+        <item>Malaysia, Perak</item>
+        <item>Malaysia, Perlis</item>
+        <item>Malaysia, Penang</item>
+        <item>Malaysia, Sabah</item>
+        <item>Malaysia, Sarawak</item>
+        <item>Malaysia, Selangor</item>
+        <item>Malaysia, Terengganu</item>
+    </string-array>
+    <string-array name="areaCode_spinner">
+        <item>Malaysia +60</item>
+        <item>Singapore +65</item>
+        <item>Indonesia +62</item>
+        <item>Thailand +66</item>
+        <item>Philippines +63</item>
+        <item>Vietnam +84</item>
+        <item>Myanmar +95</item>
+    </string-array>
+    <string-array name="nationality_spinner">
+        <item>Malaysia</item>
+        <item>Singapore</item>
+        <item>Indonesia</item>
+        <item>Thailand</item>
+        <item>Philippines</item>
+        <item>Vietnam</item>
+        <item>Myanmar</item>
+    </string-array>
+    <string-array name="educationLvl_spinner">
+        <item>Bachelor Degree</item>
+        <item>Diploma</item>
+        <item>Doctorate (PhD)</item>
+        <item>SPM</item>
+        <item>STPM</item>
+    </string-array>
+    <string-array name="fieldOfStudies1_spinner">
+        <item>Accounting/Finance</item>
+        <item>Arts/Media</item>
+        <item>Architecture</item>
+        <item>Computer/IT</item>
+        <item>Education/Training</item>
+        <item>Engineering</item>
+        <item>HR Management</item>
+        <item>History</item>
+        <item>Hospitality</item>
+        <item>Logistic</item>
+        <item>Personal Services</item>
+        <item>Pharmacy</item>
+        <item>Sales/Marketing</item>
+        <item>Sciences</item>
+    </string-array>
+    <string-array name="fieldOfStudies2_spinner">
+        <item>Sciences</item>
+        <item>Arts</item>
+    </string-array>
+    <string-array name="year_spinner">
+        <item>2023</item>
+        <item>2022</item>
+        <item>2021</item>
+        <item>2020</item>
+        <item>2019</item>
+        <item>2018</item>
+        <item>2017</item>
+        <item>2016</item>
+        <item>2015</item>
+        <item>2014</item>
+        <item>2013</item>
+        <item>2012</item>
+        <item>2011</item>
+        <item>2010</item>
+        <item>2009</item>
+        <item>2008</item>
+        <item>2007</item>
+        <item>2006</item>
+        <item>2005</item>
+        <item>2004</item>
+        <item>2003</item>
+    </string-array>
+    <string-array name="month_spinner">
+        <item>January</item>
+        <item>February</item>
+        <item>March</item>
+        <item>April</item>
+        <item>May</item>
+        <item>June</item>
+        <item>July</item>
+        <item>August</item>
+        <item>September</item>
+        <item>October</item>
+        <item>November</item>
+        <item>December</item>
+    </string-array>
+    <string-array name="companyIndustry_spinner">
+        <item>Accounting/Finance</item>
+        <item>Admin/HR</item>
+        <item>Arts/Media</item>
+        <item>Building/Construction</item>
+        <item>Computer/IT</item>
+        <item>Education/Training</item>
+        <item>Engineering</item>
+        <item>Healthcare</item>
+        <item>Hotel/Dormitory</item>
+        <item>Manufacturing</item>
+        <item>Restaurant</item>
+        <item>Sales/Marketing</item>
+        <item>Sciences</item>
+        <item>Services</item>
+    </string-array>
+
     <string name="company_details_title">Company Details</string>
     <string name="company_logo_field">Upload Company Logo</string>
     <string name="company_name_field">Company Name</string>
@@ -111,8 +312,4 @@
     <string name="interviews_text">Interviews</string>
     <string name="editProfile_text">Edit Profile</string>
 
-    <!--    Available ady-->
-    <string name="log_in_text">Log in</string>
-    <string name="login_text">Login</string>
-    <string name="profile_text">Profile</string>
 </resources>
