@@ -30,8 +30,36 @@
         <activity
             android:name=".view.EmpApplicantsActivity"
             android:exported="false" />
+
+        <!--Applicant Part-->
         <activity
-            android:name="MainActivity"
+            android:name=".view.ApplManageProfileActivity"
+            android:exported="false" />
+        <activity
+            android:name=".view.ApplApplicationHistoryActivity"
+            android:exported="false" />
+        <activity
+            android:name=".view.ApplSentApplicationActivity"
+            android:exported="false" />
+        <activity
+            android:name=".view.ApplSubmitApplicationActivity"
+            android:exported="false" />
+        <activity
+            android:name=".view.ApplJobDetailsActivity"
+            android:exported="false" />
+        <activity
+            android:name=".view.ApplLoginActivity"
+            android:exported="false"
+            android:windowSoftInputMode="adjustPan" />
+        <activity
+            android:name=".view.ApplMainActivity"
+            android:exported="false" />
+        <activity
+            android:name=".view.ApplSignUpActivity"
+            android:exported="false"
+            android:windowSoftInputMode="adjustPan" />
+        <activity
+            android:name=".view.RoleActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -39,6 +67,11 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+
+        <activity
+            android:name=".MainActivity"
+            android:exported="false"/>
     </application>
 
 </manifest>

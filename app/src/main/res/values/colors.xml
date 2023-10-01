@@ -3,4 +3,8 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
     <color name="theme">#0E2240</color>
+    <color name="theme_pressed">#1A3158</color>
+    <color name="theme_focused">#081626</color>
+    <color name="blank_pressed">#E0E0E0</color>
+    <color name="blank_focused">#CCCCCC</color>
 </resources>
