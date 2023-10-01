@@ -13,7 +13,25 @@
         android:theme="@style/Theme.JobGuru"
         tools:targetApi="31">
         <activity
-            android:name=".MainActivity"
+            android:name=".view.EmpJobsActivity"
+            android:exported="false" />
+        <activity
+            android:name=".view.EmpJobDetailsActivity"
+            android:exported="false" />
+        <activity
+            android:name=".view.EmpProfileActivity"
+            android:exported="false" />
+        <activity
+            android:name=".view.EmpLoginActivity"
+            android:exported="false" />
+        <activity
+            android:name=".view.EmpInterviewActivity"
+            android:exported="false" />
+        <activity
+            android:name=".view.EmpApplicantsActivity"
+            android:exported="false" />
+        <activity
+            android:name="MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
