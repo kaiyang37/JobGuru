@@ -11,7 +11,6 @@ import android.widget.Toast.makeText
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.jobguru.databinding.ActivityApplApplicationHistoryBinding
-import com.example.jobguru.databinding.FragmentApplHomeBinding
 import com.example.jobguru.viewmodel.ApplApplicationHistoryAdapter
 import com.example.jobguru.viewmodel.ApplApplicationHistoryViewModel
 import com.example.jobguru.viewmodel.ApplFilterViewModel

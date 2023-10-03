@@ -1,9 +1,9 @@
 package com.example.jobguru.view
 
 import android.content.Context
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.example.jobguru.R
@@ -32,23 +32,23 @@ class ApplMainActivity : AppCompatActivity() {
             val editor = sharedPreferences.edit()
             editor.putString("applId", observedApplId)
             editor.apply()
-            Log.d("MyApp", "Email: $observedApplId")
+            Log.d("MyApp", "Applicant ID: $observedApplId")
         }
 
-        replaceFragment(ApplHomeFragment())
-
-        binding.bottomNavigationView.setOnItemSelectedListener {
-            when (it.itemId) {
-                R.id.home -> replaceFragment(ApplHomeFragment())
-                R.id.search -> replaceFragment(ApplSearchFragment())
-                R.id.saved_jobs -> replaceFragment(ApplSavedJobsFragment())
-                R.id.profile -> replaceFragment(ApplProfileFragment())
-                else -> {
-
-                }
-            }
-            true
-        }
+//        replaceFragment(ApplHomeFragment())
+//
+//        binding.bottomNavigationView.setOnItemSelectedListener {
+//            when (it.itemId) {
+//                R.id.home -> replaceFragment(ApplHomeFragment())
+//                R.id.search -> replaceFragment(ApplSearchFragment())
+//                R.id.saved_jobs -> replaceFragment(ApplSavedJobsFragment())
+//                R.id.profile -> replaceFragment(ApplProfileFragment())
+//                else -> {
+//
+//                }
+//            }
+//            true
+//        }
 
 //        val sharedPreferences = getSharedPreferences("MyPrefs", Context.MODE_PRIVATE)
 //

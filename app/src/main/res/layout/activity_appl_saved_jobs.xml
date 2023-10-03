@@ -1,11 +1,10 @@
 <layout>
-
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".view.ApplSavedJobsFragment">
+    tools:context=".view.ApplSavedJobsActivity">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -40,18 +39,23 @@
                 android:background="#EAEAEA" />
         </LinearLayout>
 
-        <LinearLayout
-            android:id="@+id/emptySavedJobs"
+        <ScrollView
+            android:id="@+id/emptySavedJobsScrollView"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
+            android:layout_height="0dp"
+            android:background="@color/white"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/topPart">
+            app:layout_constraintTop_toBottomOf="@id/topPart"
+            app:layout_constraintBottom_toTopOf="@id/bottomPart">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
 
             <ImageView
-                android:layout_width="match_parent"
-                android:layout_height="756px"
+                android:layout_width="776px"
+                android:layout_height="606px"
                 android:layout_gravity="center"
                 android:paddingLeft="5dp"
                 android:paddingRight="5dp"
@@ -76,8 +80,40 @@
                 android:textAlignment="center"
                 android:textColor="@color/black"
                 android:textSize="16sp" />
-        </LinearLayout>
+            <LinearLayout
+                android:visibility="gone"
+                android:id="@+id/actionButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:paddingTop="50sp">
 
+                <Button
+                    android:id="@+id/loginBtn"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="15sp"
+                    android:background="@drawable/filled_button"
+                    android:text="@string/log_in_text"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    app:backgroundTint="@null" />
+
+                <Button
+                    android:id="@+id/signUpBtn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="15sp"
+                    android:layout_marginBottom="15sp"
+                    android:background="@android:color/transparent"
+                    android:text="Sign up"
+                    android:textAlignment="center"
+                    android:textColor="@color/theme"
+                    android:textSize="18sp" />
+            </LinearLayout>
+        </LinearLayout>
+        </ScrollView>
         <ScrollView
             android:id="@+id/savedJobsScrollView"
             android:layout_width="match_parent"
@@ -233,8 +269,43 @@
                 </androidx.cardview.widget.CardView>
             </LinearLayout>
         </ScrollView>
+        <LinearLayout
+            android:id="@+id/bottomPart"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent">
 
+            <LinearLayout
+                android:id="@+id/bottomNav"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:layout_alignParentBottom="true"
+                android:orientation="vertical">
+
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="2dp"
+                    android:background="#BEBEBE" />
+
+                <com.google.android.material.bottomnavigation.BottomNavigationView
+                    android:id="@+id/bottomNavigationView"
+                    style="@style/CustomBottomNavigationView"
+                    android:layout_width="match_parent"
+                    android:background="@color/white"
+                    android:layout_height="60dp"
+                    app:labelVisibilityMode="labeled"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.5"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:menu="@menu/appl_nav_menu" />
+            </LinearLayout>
+        </LinearLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-</FrameLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

@@ -13,6 +13,19 @@
         android:theme="@style/Theme.JobGuru"
         tools:targetApi="31">
         <activity
+            android:name=".view.ApplProfileActivity"
+            android:exported="false" />
+        <activity
+            android:name=".view.ApplSavedJobsActivity"
+            android:exported="false" />
+        <activity
+            android:name=".view.ApplSearchActivity"
+            android:windowSoftInputMode="adjustPan"
+            android:exported="false" />
+        <activity
+            android:name=".view.ApplHomeActivity"
+            android:exported="false" />
+        <activity
             android:name=".view.EmpJobsActivity"
             android:exported="false" />
         <activity
@@ -29,9 +42,7 @@
             android:exported="false" />
         <activity
             android:name=".view.EmpApplicantsActivity"
-            android:exported="false" />
-
-        <!--Applicant Part-->
+            android:exported="false" /> <!-- Applicant Part -->
         <activity
             android:name=".view.ApplManageProfileActivity"
             android:exported="false" />
@@ -67,11 +78,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
-
         <activity
             android:name=".MainActivity"
-            android:exported="false"/>
+            android:exported="false" />
     </application>
 
 </manifest>

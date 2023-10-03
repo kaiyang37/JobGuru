@@ -1,25 +1,19 @@
 package com.example.jobguru.view
 
-import android.annotation.SuppressLint
 import android.app.AlertDialog
 import android.content.Context
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
 import android.widget.Button
 import android.widget.TextView
+import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.example.jobguru.R
 import com.example.jobguru.databinding.ActivityApplJobDetailsBinding
 import com.example.jobguru.viewmodel.ApplJobDetailsViewModel
 import com.example.jobguru.viewmodel.SaveJobInsertionViewModel
-import com.google.firebase.database.DataSnapshot
-import com.google.firebase.database.DatabaseError
-import com.google.firebase.database.FirebaseDatabase
-import com.google.firebase.database.Query
-import com.google.firebase.database.ValueEventListener
 
 class ApplJobDetailsActivity : AppCompatActivity() {
 
@@ -36,7 +30,7 @@ class ApplJobDetailsActivity : AppCompatActivity() {
         viewModel = ViewModelProvider(this).get(ApplJobDetailsViewModel::class.java)
 
         binding.upButton.setOnClickListener {
-            finish()
+            this.onBackPressed()
         }
 
         val jobId = intent.getStringExtra("jobId").toString()
@@ -105,23 +99,24 @@ class ApplJobDetailsActivity : AppCompatActivity() {
 //        }
 
         binding.applyNowBtn.setOnClickListener {
-            val editor = sharedPreferences.edit()
-            editor.putString("applyJobId", jobId)
-            editor.apply()
+            if (!applId.isNullOrEmpty()) {
+                val editor = sharedPreferences.edit()
+                editor.putString("applyJobId", jobId)
+                editor.apply()
 
-            if (applId != null) {
                 viewModel.checkApplProfileStatus(applId)
-            }
 
-            viewModel.applProfileStatus.observe(this) { isProfileEmpty ->
-                if (isProfileEmpty) {
-                    showCompleteProfileDialog()
-                } else {
-                    val intent = Intent(this, ApplSubmitApplicationActivity::class.java)
-                    startActivity(intent)
+                viewModel.applProfileStatus.observe(this) { isProfileEmpty ->
+                    if (isProfileEmpty) {
+                        showCompleteProfileDialog()
+                    } else {
+                        val intent = Intent(this, ApplSubmitApplicationActivity::class.java)
+                        startActivity(intent)
+                    }
                 }
+            } else{
+                showLoginSignUpDialog()
             }
-
         }
     }
     private fun replaceFragment(fragment: Fragment) {
@@ -145,6 +140,35 @@ class ApplJobDetailsActivity : AppCompatActivity() {
 
         completeProfileBtn.setOnClickListener {
             replaceFragment(ApplCompleteCurrentStatusFragment())
+        }
+
+        maybeLaterBtn.setOnClickListener {
+            alertDialog.dismiss()
+        }
+    }
+
+    private fun showLoginSignUpDialog(){
+        val loginSignUpDialog = AlertDialog.Builder(this)
+        val inflater = layoutInflater
+        val loginSignUpDialogView = inflater.inflate(R.layout.appl_login_signup_dialog, null)
+        val loginBtn = loginSignUpDialogView.findViewById<Button>(R.id.loginBtn)
+        val signUpBtn = loginSignUpDialogView.findViewById<Button>(R.id.signUpBtn)
+        val maybeLaterBtn = loginSignUpDialogView.findViewById<TextView>(R.id.maybeLaterBtn)
+
+        loginSignUpDialog.setView(loginSignUpDialogView)
+
+        val alertDialog = loginSignUpDialog.create()
+        alertDialog.show()
+
+        loginBtn.setOnClickListener {
+            val intent = Intent(this, ApplLoginActivity::class.java)
+            startActivity(intent)
+        }
+
+
+        signUpBtn.setOnClickListener {
+            val intent = Intent(this, ApplSignUpActivity::class.java)
+            startActivity(intent)
         }
 
         maybeLaterBtn.setOnClickListener {
