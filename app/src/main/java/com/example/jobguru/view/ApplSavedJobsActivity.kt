@@ -24,6 +24,16 @@ class ApplSavedJobsActivity : AppCompatActivity() {
         if(loginEmail.isNullOrEmpty()){
             binding.actionButton.visibility = View.VISIBLE
         }
+
+        binding.loginBtn.setOnClickListener {
+            val intent = Intent(this, ApplLoginActivity::class.java)
+            startActivity(intent)
+        }
+
+        binding.signUpBtn.setOnClickListener {
+            val intent = Intent(this, ApplSignUpActivity::class.java)
+            startActivity(intent)
+        }
     }
 
     private fun bottomNavigationBar() {
