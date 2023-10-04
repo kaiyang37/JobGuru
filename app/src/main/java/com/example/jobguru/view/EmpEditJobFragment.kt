@@ -26,22 +26,12 @@ class EmpEditJobFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val view = inflater.inflate(R.layout.fragment_emp_edit_job, container, false)
-
-        binding = FragmentEmpEditJobBinding.bind(view)
+        binding = FragmentEmpEditJobBinding.inflate(inflater, container, false)
         viewModel = ViewModelProvider(this).get(EmpEditJobViewModel::class.java)
-
         roleSpinner()
         specializationSpinner()
         yearOfExpSpinner()
         stateSpinner()
-
-        requireActivity().window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN)
-        return view
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
 
         binding.upButton.setOnClickListener{
             val fragmentManager: FragmentManager = requireActivity().supportFragmentManager
@@ -74,26 +64,63 @@ class EmpEditJobFragment : Fragment() {
         binding.maxSalary.setText(arguments?.getDouble("jobMaxSalary").toString())
 
         binding.editJobBtn.setOnClickListener {
-            viewModel.updateJobData(
-                jobId,
-                binding.jobTitle.text.toString(),
-                binding.jobDesc.text.toString(),
-                binding.minSalary.text.toString().toDouble(),
-                binding.maxSalary.text.toString().toDouble(),
-                onSuccess = {
-                    Toast.makeText(requireContext(), "Job Data Updated", Toast.LENGTH_LONG).show()
-                    requireActivity().finish()
-                    val intent = Intent(requireContext(), EmpJobDetailsActivity::class.java)
-                    intent.putExtras(requireActivity().intent) // Pass any existing extras if needed
-                    startActivity(intent)
-                    //requireActivity().onBackPressed()
-                },
-                onError = { errorMessage ->
-                    Toast.makeText(requireContext(), errorMessage, Toast.LENGTH_LONG).show()
-                }
+            val jobTitle = binding.jobTitle.text.toString()
+            val jobDesc = binding.jobDesc.text.toString()
+            val jobMinSalary = binding.minSalary.text.toString().toDoubleOrNull() ?: 0.0
+            val jobMaxSalary = binding.maxSalary.text.toString().toDoubleOrNull() ?: 0.0
+            if (viewModel.validateData(
+                    jobTitle,
+                    jobDesc,
+                    jobMinSalary,
+                    jobMaxSalary
+                )
+            ) {
+                viewModel.updateJobData(
+                    jobId,
+                    jobTitle,
+                    jobDesc,
+                    jobMinSalary,
+                    jobMaxSalary,
+                    onSuccess = {
+                        Toast.makeText(requireContext(), "$jobTitle is updated successfully", Toast.LENGTH_LONG)
+                            .show()
+                        requireActivity().finish()
+                        val intent = Intent(requireContext(), EmpJobDetailsActivity::class.java)
+                        intent.apply {
+                            putExtra("jobId", jobId)
+                        }
+                        startActivity(intent)
+                    },
+                    onError = { errorMessage ->
+                        Toast.makeText(requireContext(), errorMessage, Toast.LENGTH_LONG).show()
+                    }
 
-            )
+                )
+            }
         }
+
+        // Observe error messages and update UI accordingly
+        viewModel.jobTitleError.observe(requireActivity()) { errorMessage ->
+            binding.jobTitleErrorMessage.text = errorMessage
+            binding.jobTitleErrorMessage.visibility = View.VISIBLE
+        }
+
+        viewModel.jobDescError.observe(requireActivity()) { errorMessage ->
+            binding.jobDescErrorMessage.text = errorMessage
+            binding.jobDescErrorMessage.visibility = View.VISIBLE
+        }
+
+        viewModel.minSalaryError.observe(requireActivity()) { errorMessage ->
+            binding.minSalaryErrorMessage.text = errorMessage
+            binding.minSalaryErrorMessage.visibility = View.VISIBLE
+        }
+        viewModel.maxSalaryError.observe(requireActivity()) { errorMessage ->
+            binding.maxSalaryErrorMessage.text = errorMessage
+            binding.maxSalaryErrorMessage.visibility = View.VISIBLE
+        }
+
+        requireActivity().window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN)
+        return binding.root
     }
 
     private fun roleSpinner() {
