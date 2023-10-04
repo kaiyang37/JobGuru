@@ -3,12 +3,12 @@ package com.example.jobguru.view
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
+import androidx.fragment.app.Fragment
 import com.example.jobguru.R
 import com.example.jobguru.databinding.FragmentApplSalaryBinding
 
@@ -38,7 +38,7 @@ class ApplSalaryFragment : Fragment(), AdapterView.OnItemSelectedListener {
 
         binding.completeBtn.setOnClickListener {
             saveSelectedSalary(binding.salarySpinner.selectedItem.toString())
-            val intent = Intent(requireActivity(), ApplMainActivity::class.java)
+            val intent = Intent(requireActivity(), ApplHomeActivity::class.java)
             startActivity(intent)
         }
 

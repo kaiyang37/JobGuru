@@ -5,40 +5,35 @@ import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
-import androidx.fragment.app.Fragment
+import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.jobguru.databinding.FragmentApplSearchBinding
+import com.example.jobguru.R
+import com.example.jobguru.databinding.ActivityApplSearchBinding
 import com.example.jobguru.viewmodel.ApplSearchViewModel
 
-class ApplSearchFragment : Fragment() {
-    private lateinit var binding: FragmentApplSearchBinding
+class ApplSearchActivity : AppCompatActivity() {
+
+    private lateinit var binding: ActivityApplSearchBinding
     private lateinit var viewModel: ApplSearchViewModel
     private lateinit var jAdapter: ApplJobAdapter
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        binding = FragmentApplSearchBinding.inflate(inflater, container, false)
-        return binding.root
-    }
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        binding = ActivityApplSearchBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+        bottomNavigationBar()
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        viewModel = ViewModelProvider(requireActivity()).get(ApplSearchViewModel::class.java)
+        viewModel = ViewModelProvider(this).get(ApplSearchViewModel::class.java)
 
         binding.searchJobsField.setOnClickListener { // Make the EditText focusable when clicked
             binding.searchJobsField.isFocusableInTouchMode = true
             binding.searchJobsField.requestFocus()
 
-            val inputMethodManager =
-                requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+            val inputMethodManager = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
             inputMethodManager.showSoftInput(
                 binding.searchJobsField,
                 InputMethodManager.SHOW_IMPLICIT
@@ -58,13 +53,13 @@ class ApplSearchFragment : Fragment() {
             }
         })
 
-        binding.rvJob.layoutManager = LinearLayoutManager(requireContext())
+        binding.rvJob.layoutManager = LinearLayoutManager(this)
         binding.rvJob.setHasFixedSize(true)
         jAdapter = ApplJobAdapter(ArrayList())
         binding.rvJob.adapter = jAdapter
 
 
-        viewModel.searchedJobList.observe(viewLifecycleOwner) { jobList ->
+        viewModel.searchedJobList.observe(this) { jobList ->
             jAdapter.setData(jobList)
             if (binding.searchJobsField.equals(null)) {
                 binding.rvJob.visibility = View.GONE
@@ -119,12 +114,6 @@ class ApplSearchFragment : Fragment() {
             viewModel.filterJobsBasedOnSpec("Services")
         }
 
-        // Observe the jobList LiveData and update the RecyclerView when it changes
-//        viewModel.jobList.observe(viewLifecycleOwner, { jobList ->
-//            jAdapter.setData(jobList)
-//            binding.rvJob.visibility = if (jobList.isEmpty()) View.GONE else View.VISIBLE
-//        })
-
         jAdapter.setOnItemClickListener(object : ApplJobAdapter.onItemClickListener {
             override fun onItemClick(position: Int) {
                 val jobListToUse =
@@ -135,7 +124,7 @@ class ApplSearchFragment : Fragment() {
                     }
 
                 if (position < jobListToUse.size) {
-                    val intent = Intent(requireContext(), ApplJobDetailsActivity::class.java)
+                    val intent = Intent(this@ApplSearchActivity, ApplJobDetailsActivity::class.java)
                     val jobItem = jobListToUse[position]
 
                     intent.apply {
@@ -153,7 +142,7 @@ class ApplSearchFragment : Fragment() {
                     startActivity(intent)
                 } else {
                     Toast.makeText(
-                        requireContext(),
+                        this@ApplSearchActivity,
                         "Job not found or list is empty.",
                         Toast.LENGTH_SHORT
                     ).show()
@@ -162,5 +151,37 @@ class ApplSearchFragment : Fragment() {
         })
     }
 
+    private fun bottomNavigationBar() {
+        binding.bottomNavigationView.setSelectedItemId(R.id.search)
+        binding.bottomNavigationView.setOnNavigationItemSelectedListener { item ->
+            when (item.itemId) {
+                R.id.home -> {
+                    val intent = Intent(applicationContext, ApplHomeActivity::class.java)
+                    startActivity(intent)
+                    overridePendingTransition(0, 0)
+                    true
+                }
 
+                R.id.search -> {
+                    true
+                }
+
+                R.id.saved_jobs -> {
+                    val intent = Intent(applicationContext, ApplSavedJobsActivity::class.java)
+                    startActivity(intent)
+                    overridePendingTransition(0, 0)
+                    true
+                }
+
+                R.id.profile -> {
+                    val intent = Intent(applicationContext, ApplProfileActivity::class.java)
+                    startActivity(intent)
+                    overridePendingTransition(0, 0)
+                    true
+                }
+
+                else -> false
+            }
+        }
+    }
 }

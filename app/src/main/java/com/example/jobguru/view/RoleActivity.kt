@@ -21,7 +21,7 @@ class RoleActivity : AppCompatActivity() {
         val loginEmail = sharedPreferences.getString("loginEmail", "")
 
         if (exploreJobsSelected || !loginEmail.isNullOrEmpty()) {
-            startActivity(Intent(this, ApplMainActivity::class.java))
+            startActivity(Intent(this, ApplHomeActivity::class.java))
             finish()
         }
 
@@ -67,7 +67,7 @@ class RoleActivity : AppCompatActivity() {
             val editor = sharedPreferences.edit()
             editor.putBoolean("exploreJobsSelected", true)
             editor.apply()
-            startActivity(Intent(this, ApplMainActivity::class.java))
+            startActivity(Intent(this, ApplHomeActivity::class.java))
             finish()
         }
 

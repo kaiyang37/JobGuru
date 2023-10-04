@@ -1,18 +1,11 @@
 <layout>
 
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".view.ApplHomeFragment">
-
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/home_login"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="#D9D9D9"
-        android:visibility="visible">
+    tools:context=".view.ApplHomeActivity">
 
         <LinearLayout
             android:id="@+id/topPart"
@@ -46,11 +39,13 @@
 
 
         <ScrollView
+            android:id="@+id/home_login"
+            android:background="#D9D9D9"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/bottomPart"
             app:layout_constraintTop_toBottomOf="@id/topPart">
 
             <LinearLayout
@@ -67,53 +62,15 @@
             </LinearLayout>
         </ScrollView>
 
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
-
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/home_logout"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@color/white"
-        android:visibility="gone">
-
-        <LinearLayout
-            android:id="@+id/upperPart"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_gravity="center"
-                android:layout_weight="1"
-                android:background="@color/white"
-                android:gravity="center"
-                android:paddingTop="10sp"
-                android:paddingBottom="10sp"
-                android:text="@string/recommended_jobs_text"
-                android:textAlignment="center"
-                android:textColor="@color/theme"
-                android:textSize="20sp"
-                android:textStyle="bold" />
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="2dp"
-                android:background="#EAEAEA" />
-        </LinearLayout>
-
         <ScrollView
             android:layout_width="match_parent"
             android:layout_height="0dp"
+            android:id="@+id/home_logout"
+            android:visibility="gone"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/upperPart"
-            app:layout_constraintBottom_toBottomOf="parent">
+            app:layout_constraintTop_toBottomOf="@id/topPart"
+            app:layout_constraintBottom_toTopOf="@id/bottomPart">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -122,7 +79,7 @@
 
                 <ImageView
                     android:layout_width="776px"
-                    android:layout_height="706px"
+                    android:layout_height="606px"
                     android:layout_gravity="center"
                     android:paddingLeft="5dp"
                     android:paddingRight="5dp"
@@ -141,6 +98,9 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
+                    android:textAlignment="center"
+                    android:layout_marginHorizontal="50sp"
+                    android:layout_marginVertical="10sp"
                     android:text="See the jobs we've found for you"
                     android:textColor="@color/black"
                     android:textSize="16sp" />
@@ -179,7 +139,43 @@
                 </LinearLayout>
             </LinearLayout>
         </ScrollView>
-    </androidx.constraintlayout.widget.ConstraintLayout>
 
-</FrameLayout>
+    <LinearLayout
+        android:id="@+id/bottomPart"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <LinearLayout
+            android:id="@+id/bottomNav"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:layout_alignParentBottom="true"
+            android:orientation="vertical">
+
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:background="#BEBEBE" />
+
+            <com.google.android.material.bottomnavigation.BottomNavigationView
+                android:id="@+id/bottomNavigationView"
+                style="@style/CustomBottomNavigationView"
+                android:layout_width="match_parent"
+                android:background="@color/white"
+                android:layout_height="60dp"
+                app:labelVisibilityMode="labeled"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toStartOf="parent"
+                app:menu="@menu/appl_nav_menu" />
+        </LinearLayout>
+    </LinearLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

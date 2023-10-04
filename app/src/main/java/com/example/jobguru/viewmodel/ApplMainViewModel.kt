@@ -22,7 +22,6 @@ class ApplMainViewModel : ViewModel() {
             override fun onDataChange(snapshot: DataSnapshot) {
                 if (snapshot.exists()) {
                     val applData = snapshot.children.first().getValue(ApplicantModel::class.java)
-
                     _applId.value = applData?.applId
                 }
             }

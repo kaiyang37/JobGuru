@@ -1,11 +1,11 @@
 package com.example.jobguru.view
 
 import android.content.Context
-import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
+import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import com.example.jobguru.R
 import com.example.jobguru.databinding.ActivityApplLoginBinding
 import com.example.jobguru.viewmodel.ApplLoginViewModel
 
@@ -50,10 +50,17 @@ class ApplLoginActivity : AppCompatActivity() {
                 val editor = sharedPreferences.edit()
                 editor.putString("loginEmail", binding.emailTextBox.text.toString())
                 editor.apply()
-                val intent = Intent(this, ApplMainActivity::class.java)
-                startActivity(intent)
-                finish()
+                replaceFragment(ApplLocationFragment())
+//                val intent = Intent(this, ApplHomeActivity::class.java)
+//                startActivity(intent)
             }
         }
+    }
+
+    private fun replaceFragment(fragment: Fragment) {
+        val fragmentManager = supportFragmentManager
+        val fragmentTransaction = fragmentManager.beginTransaction()
+        fragmentTransaction.replace(R.id.frame_layout, fragment)
+        fragmentTransaction.commit()
     }
 }
