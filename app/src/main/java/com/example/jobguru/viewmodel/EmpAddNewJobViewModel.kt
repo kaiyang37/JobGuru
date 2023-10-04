@@ -1,5 +1,7 @@
 package com.example.jobguru.viewmodel
 
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.jobguru.model.JobModel
 import com.google.firebase.database.DataSnapshot
@@ -53,65 +55,118 @@ class EmpAddNewJobViewModel : ViewModel() {
     var selectedYearOfExp: String = ""
     var selectedState: String = ""
     var empId: String = ""
+    var empName: String = ""
+
+    // LiveData for error messages
+    private val _jobTitleError = MutableLiveData<String>()
+    val jobTitleError: LiveData<String> = _jobTitleError
+
+    private val _jobDescError = MutableLiveData<String>()
+    val jobDescError: LiveData<String> = _jobDescError
+
+    private val _minSalaryError = MutableLiveData<String>()
+    val minSalaryError: LiveData<String> = _minSalaryError
+
+    private val _maxSalaryError = MutableLiveData<String>()
+    val maxSalaryError: LiveData<String> = _maxSalaryError
+
+    fun validateData(
+        jobTitle: String,
+        jobDesc: String,
+        jobMinSalary: Double,
+        jobMaxSalary: Double
+    ): Boolean {
+
+        // Clear previous error messages
+        _jobTitleError.value = null
+        _jobDescError.value = null
+        _minSalaryError.value = null
+        _maxSalaryError.value = null
+
+        var isValid = true
+
+        if (jobTitle.isBlank()) {
+            _jobTitleError.value = "Job title is required"
+            isValid = false
+        }
+
+        if (jobDesc.isBlank()) {
+            _jobDescError.value = "Job description is required"
+            isValid = false
+        }
+
+        if (jobMinSalary == 0.0 && jobMaxSalary == 0.0) {
+            _minSalaryError.value = "Job minimum salary is required"
+            _maxSalaryError.value = "Job maximum salary is required"
+            isValid = false
+        }else {
+
+            if (jobMinSalary < 0.0) {
+                _minSalaryError.value = "Job minimum salary cannot be less than 0"
+                isValid = false
+            } else if (jobMinSalary > jobMaxSalary) {
+                _minSalaryError.value = "Job minimum salary cannot be more than job maximum salary"
+                isValid = false
+            }
+
+            if (jobMaxSalary == 0.0) {
+                _maxSalaryError.value = "Job maximum salary cannot be 0"
+                isValid = false
+            } else if (jobMinSalary > jobMaxSalary) {
+                _maxSalaryError.value = "Job maximum salary cannot be less than job minimum salary"
+                isValid = false
+            }
+        }
+
+        return isValid
+    }
 
     // Function to save job data
     fun saveJobData(
         empEmail: String,
         jobTitle: String,
-        jobDesc: String,
         jobMinSalary: Double,
         jobMaxSalary: Double,
+        jobDesc: String,
         onSuccess: () -> Unit,
         onError: (String) -> Unit
     ) {
-        getEmpId(empEmail)
-        if (jobTitle.isEmpty()) {
-            onError("Job title cannot be empty. Please provide a valid job title.")
-            return
-        } else if (jobDesc.isEmpty()) {
-            onError("Job Description cannot be empty. Please provide a valid job description.")
-            return
-        }
+        getEmpInfo(empEmail)
+        generateNextJobId { nextJobId ->
+            val job = JobModel(
+                nextJobId,
+                empId,
+                empName,
+                empEmail,
+                jobTitle,
+                selectedRole,
+                selectedSpecialization,
+                selectedYearOfExp,
+                selectedState,
+                jobMinSalary,
+                jobMaxSalary,
+                jobDesc
+            )
 
-        try {
-            if (jobMinSalary < 0.0 || jobMaxSalary == 0.0 || jobMinSalary > jobMaxSalary) {
-                onError("Invalid job minimum or maximum salary. Please provide valid job monthly salary.")
-                return
+            dbRef.child(nextJobId).setValue(job).addOnCompleteListener {
+                onSuccess()
+            }.addOnFailureListener {
+                onError("Error inserting the job")
             }
-
-            generateNextJobId { nextJobId ->
-                val job = JobModel(
-                    nextJobId,
-                    empId,
-                    jobTitle,
-                    selectedRole,
-                    selectedSpecialization,
-                    selectedYearOfExp,
-                    selectedState,
-                    jobMinSalary,
-                    jobMaxSalary,
-                    jobDesc
-                )
-
-                dbRef.child(nextJobId).setValue(job).addOnCompleteListener {
-                    onSuccess()
-                }.addOnFailureListener {
-                    onError("Error inserting the data")
-                }
-            }
-        } catch (e: NumberFormatException) {
-            onError("Invalid salary format. Please enter a valid number.")
         }
     }
 
-    private fun getEmpId(email: String) {
+    private fun getEmpInfo(email: String) {
         val databaseReference = FirebaseDatabase.getInstance().getReference("Employers")
         val query = databaseReference.orderByChild("personInChargeEmail").equalTo(email)
 
         query.addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onDataChange(dataSnapshot: DataSnapshot) {
                 if (dataSnapshot.exists()) {
-                    empId = dataSnapshot.children.first().key.toString()
+                    val employerSnapshot = dataSnapshot.children.first()
+                    empId = employerSnapshot.key.toString()
+                    empName =
+                        employerSnapshot.child("empName").getValue(String::class.java).toString()
                 }
             }
 
