@@ -7,6 +7,7 @@ import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.jobguru.R
@@ -81,15 +82,8 @@ class ApplHomeActivity : AppCompatActivity() {
                             selectedSpec,
                             selectedSalary
                         )
-                    } else{
-                        val sharedPreferences = getSharedPreferences("MyPrefs", Context.MODE_PRIVATE)
-                        val editor = sharedPreferences.edit()
-                        editor.clear()
-                        editor.apply()
-
-                        val intent = Intent(this, RoleActivity::class.java)
-                        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-                        startActivity(intent)
+                    } else {
+                        replaceFragment(ApplLocationFragment())
                     }
                 }
             }
@@ -165,4 +159,10 @@ class ApplHomeActivity : AppCompatActivity() {
         }
     }
 
+    private fun replaceFragment(fragment: Fragment) {
+        val fragmentManager = supportFragmentManager
+        val fragmentTransaction = fragmentManager.beginTransaction()
+        fragmentTransaction.replace(R.id.frame_layout, fragment)
+        fragmentTransaction.commit()
+    }
 }
