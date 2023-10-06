@@ -1,6 +1,7 @@
 package com.example.jobguru.view
 
 import android.annotation.SuppressLint
+import android.app.ProgressDialog
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
@@ -16,19 +17,16 @@ import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.app.ActivityCompat
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.ViewModelProvider
-import com.example.jobguru.databinding.FragmentEmpAddNewJobBinding
 import com.example.jobguru.databinding.FragmentEmpSignUpBinding
-import com.example.jobguru.view.EmpJobDetailsActivity
-import com.example.jobguru.view.EmpJobsActivity
 import com.example.jobguru.viewmodel.EmpSignUpViewModel
 
 class EmpSignUpFragment : Fragment() {
     private lateinit var binding: FragmentEmpSignUpBinding
     private lateinit var viewModel: EmpSignUpViewModel
     private var imageUri: Uri? = null
+    private lateinit var progressDialog: ProgressDialog
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -43,13 +41,14 @@ class EmpSignUpFragment : Fragment() {
             val fragmentManager: FragmentManager = requireActivity().supportFragmentManager
             fragmentManager.popBackStack()
         }
+        progressDialog = ProgressDialog(requireContext())
+        progressDialog.setMessage("Signing up")
 
         binding.signUpBtn.setOnClickListener {
-
             val empName = binding.empNameField.text.toString()
             val empIndustry = binding.empIndustryField.text.toString()
             val empAddress =
-                binding.empAdd1Field.text.toString() + " " + binding.empAdd2Field.text.toString()
+                binding.empAdd1Field.text.toString() + ", " + binding.empAdd2Field.text.toString()
             val empPostcode = binding.empPostcodeField.text.toString()
             val personInChargeName = binding.personInChargeNameField.text.toString()
             val personInChargeContact = binding.personInChargeContactField.text.toString()
@@ -70,6 +69,7 @@ class EmpSignUpFragment : Fragment() {
                     personInChargePassword
                 )
             ) {
+                progressDialog.show()
                 viewModel.empSignUp(personInChargeEmail, personInChargePassword)
 
                 // Observe registration success
@@ -95,6 +95,7 @@ class EmpSignUpFragment : Fragment() {
                                 val editor = sharedPreferences.edit()
                                 editor.putString("personInChargeEmail", binding.personInChargeEmailField.text.toString())
                                 editor.apply()
+                                progressDialog.dismiss()
                                 requireActivity().finish()
                                 val intent = Intent(requireContext(), EmpJobsActivity::class.java)
                                 startActivity(intent)
@@ -111,10 +112,12 @@ class EmpSignUpFragment : Fragment() {
                 // Observe registration error
                 viewModel.dbErrorText.observe(requireActivity()) { errorMessage ->
                     if (errorMessage.contains("An error occurred:")) {
+                        progressDialog.dismiss()
                         Toast.makeText(requireContext(), errorMessage, Toast.LENGTH_SHORT).show()
                     } else {
                         binding.personInChargeEmailErrorMessage.text = errorMessage
                         binding.personInChargeEmailErrorMessage.visibility = View.VISIBLE
+                        progressDialog.dismiss()
                     }
                 }
             }
@@ -124,51 +127,61 @@ class EmpSignUpFragment : Fragment() {
         viewModel.imageError.observe(requireActivity()) { errorMessage ->
             binding.empLogoErrorMessage.text = errorMessage
             binding.empLogoErrorMessage.visibility = View.VISIBLE
+            progressDialog.dismiss()
         }
 
         viewModel.empNameError.observe(requireActivity()) { errorMessage ->
             binding.empNameErrorMessage.text = errorMessage
             binding.empNameErrorMessage.visibility = View.VISIBLE
+            progressDialog.dismiss()
         }
 
         viewModel.empIndustryError.observe(requireActivity()) { errorMessage ->
             binding.empIndustryErrorMessage.text = errorMessage
             binding.empIndustryErrorMessage.visibility = View.VISIBLE
+            progressDialog.dismiss()
         }
         viewModel.empAddressError.observe(requireActivity()) { errorMessage ->
             binding.empAdd1ErrorMessage.text = errorMessage
             binding.empAdd1ErrorMessage.visibility = View.VISIBLE
             binding.empAdd2ErrorMessage.text = errorMessage
             binding.empAdd2ErrorMessage.visibility = View.VISIBLE
+            progressDialog.dismiss()
         }
 
         viewModel.empPostcodeError.observe(requireActivity()) { errorMessage ->
             binding.empPostcodeErrorMessage.text = errorMessage
             binding.empPostcodeErrorMessage.visibility = View.VISIBLE
+            progressDialog.dismiss()
         }
 
         viewModel.personInChargeNameError.observe(requireActivity()) { errorMessage ->
             binding.personInChargeNameErrorMessage.text = errorMessage
             binding.personInChargeNameErrorMessage.visibility = View.VISIBLE
+            progressDialog.dismiss()
         }
         viewModel.personInChargeContactError.observe(requireActivity()) { errorMessage ->
             binding.personInChargeContactErrorMessage.text = errorMessage
             binding.personInChargeContactErrorMessage.visibility = View.VISIBLE
+            progressDialog.dismiss()
         }
 
         viewModel.personInChargeDesignationError.observe(requireActivity()) { errorMessage ->
             binding.personInChargeDesignationErrorMessage.text = errorMessage
             binding.personInChargeDesignationErrorMessage.visibility = View.VISIBLE
+            progressDialog.dismiss()
         }
 
         viewModel.personInChargeEmailError.observe(requireActivity()) { errorMessage ->
             binding.personInChargeEmailErrorMessage.text = errorMessage
             binding.personInChargeEmailErrorMessage.visibility = View.VISIBLE
+            progressDialog.dismiss()
         }
 
         viewModel.personInChargePasswordError.observe(requireActivity()) { errorMessage ->
             binding.personInChargePasswordErrorMessage.text = errorMessage
             binding.personInChargePasswordErrorMessage.visibility = View.VISIBLE
+            progressDialog.dismiss()
         }
 
         binding.uploadLogoBtn.setOnClickListener {

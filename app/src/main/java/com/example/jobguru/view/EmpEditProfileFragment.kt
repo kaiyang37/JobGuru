@@ -12,11 +12,6 @@ import android.widget.ArrayAdapter
 import android.widget.Toast
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.ViewModelProvider
-import com.example.jobguru.viewmodel.EmpEditJobViewModel
-import com.example.jobguru.view.EmpProfileActivity
-import com.example.jobguru.R
-import com.example.jobguru.databinding.FragmentEmpAddNewJobBinding
-import com.example.jobguru.databinding.FragmentEmpEditJobBinding
 import com.example.jobguru.databinding.FragmentEmpEditProfileBinding
 import com.example.jobguru.viewmodel.EmpEditProfileViewModel
 
@@ -38,10 +33,14 @@ class EmpEditProfileFragment : Fragment() {
             fragmentManager.popBackStack()
         }
 
+
         val empEmail = arguments?.getString("personInChargeEmail").toString()
+        val empAddress = arguments?.getString("empAddress").toString()
+        val addressParts = empAddress.split(",")
         binding.empNameField.setText(arguments?.getString("empName").toString())
         binding.empIndustryField.setText(arguments?.getString("empIndustry").toString())
-        binding.empAdd1Field.setText(arguments?.getString("empAddress").toString())
+        binding.empAdd1Field.setText(addressParts[0])
+        binding.empAdd2Field.setText(addressParts[1].trim())
         binding.empPostcodeField.setText(arguments?.getString("empPostcode").toString())
         val statePosition = viewModel.states.indexOf(arguments?.getString("empState"))
         if (statePosition != -1) {
@@ -65,7 +64,7 @@ class EmpEditProfileFragment : Fragment() {
             val empName = binding.empNameField.text.toString()
             val empIndustry = binding.empIndustryField.text.toString()
             val empAddress =
-                binding.empAdd1Field.text.toString() + " " + binding.empAdd2Field.text.toString()
+                binding.empAdd1Field.text.toString() + ", " + binding.empAdd2Field.text.toString()
             val empPostcode = binding.empPostcodeField.text.toString()
             val personInChargeName = binding.personInChargeNameField.text.toString()
             val personInChargeContact = binding.personInChargeContactField.text.toString()
@@ -95,9 +94,7 @@ class EmpEditProfileFragment : Fragment() {
                             .show()
                         requireActivity().finish()
                         val intent = Intent(requireContext(), EmpProfileActivity::class.java)
-                        intent.putExtras(requireActivity().intent) // Pass any existing extras if needed
                         startActivity(intent)
-                        //requireActivity().onBackPressed()
                     },
                     onError = { errorMessage ->
                         Toast.makeText(requireContext(), errorMessage, Toast.LENGTH_LONG).show()
