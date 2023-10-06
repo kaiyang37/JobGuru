@@ -2,22 +2,22 @@ package com.example.jobguru.view
 
 import android.content.Context
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.widget.Toast
-import android.widget.Toast.makeText
+import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.jobguru.databinding.ActivityApplApplicationHistoryBinding
 import com.example.jobguru.viewmodel.ApplApplicationHistoryAdapter
 import com.example.jobguru.viewmodel.ApplApplicationHistoryViewModel
-import com.example.jobguru.viewmodel.ApplFilterViewModel
+import com.example.jobguru.viewmodel.ApplInterviewViewModel
 
 class ApplApplicationHistoryActivity : AppCompatActivity() {
 
     private lateinit var viewModel: ApplApplicationHistoryViewModel
+    private lateinit var intViewModel: ApplInterviewViewModel
     private lateinit var jAdapter: ApplApplicationHistoryAdapter
     private lateinit var binding: ActivityApplApplicationHistoryBinding
 
@@ -27,14 +27,15 @@ class ApplApplicationHistoryActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         viewModel = ViewModelProvider(this).get(ApplApplicationHistoryViewModel::class.java)
-
+        intViewModel = ViewModelProvider(this).get(ApplInterviewViewModel::class.java)
         binding.upBtn.setOnClickListener{
-            finish()
+            val intent = Intent(this, ApplProfileActivity::class.java)
+            startActivity(intent)
         }
 
         binding.rvJob.layoutManager = LinearLayoutManager(this)
         binding.rvJob.setHasFixedSize(true)
-        jAdapter = ApplApplicationHistoryAdapter(ArrayList())
+        jAdapter = ApplApplicationHistoryAdapter(ArrayList(), intViewModel, this)
         binding.rvJob.adapter = jAdapter
 
         val sharedPreferences = getSharedPreferences("MyPrefs", Context.MODE_PRIVATE)
@@ -43,25 +44,26 @@ class ApplApplicationHistoryActivity : AppCompatActivity() {
             viewModel.getApplyData(applId)
         }
 
-        viewModel.searchJobList.observe(this) { jobList ->
-            jAdapter.setData(jobList)
-            Log.d("MyTag", "Job List Size: ${jobList.size}")
-            Log.d("MyTag", "Job List Size: $jobList")
-            binding.rvJob.visibility = if (jobList.isEmpty()) View.GONE else View.VISIBLE
+        viewModel.searchApplyList.observe(this) { applyList ->
+            jAdapter.setData(applyList)
+            Log.d("MyTag", "Apply List Size: ${applyList.size}")
+            Log.d("MyTag", "Apply List: $applyList")
+            binding.rvJob.visibility = if (applyList.isEmpty()) View.GONE else View.VISIBLE
+            binding.emptyAppHistory.visibility = if (applyList.isEmpty()) View.VISIBLE else View.GONE
         }
 
         jAdapter.setOnItemClickListener(object : ApplApplicationHistoryAdapter.onItemClickListener {
             override fun onItemClick(position: Int) {
-                val jobListToUse =
-                    if (viewModel.searchJobList.value != null && position < viewModel.searchJobList.value!!.size) {
-                        viewModel.searchJobList.value!!
+                val applyListToUse =
+                    if (viewModel.searchApplyList.value != null && position < viewModel.searchApplyList.value!!.size) {
+                        viewModel.searchApplyList.value!!
                     } else {
                         viewModel.jobList.value ?: emptyList()
                     }
 
-                if (position < jobListToUse.size) {
+                if (position < applyListToUse.size) {
                     val intent = Intent(this@ApplApplicationHistoryActivity, ApplJobDetailsActivity::class.java)
-                    val jobItem = jobListToUse[position]
+                    val jobItem = applyListToUse[position]
 
                     intent.putExtra("jobId", jobItem.jobId)
                     startActivity(intent)

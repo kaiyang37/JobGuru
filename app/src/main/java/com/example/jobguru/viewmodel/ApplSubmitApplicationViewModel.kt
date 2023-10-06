@@ -34,9 +34,18 @@ class ApplSubmitApplicationViewModel : ViewModel() {
         get() = _jobTitle
 
     private val dbRef = FirebaseDatabase.getInstance().getReference("Apply")
+
     fun submitApplication(
         applId: String,
         jobId: String,
+        jobTitle: String,
+        empName: String,
+        jobCompanyEmail: String,
+        jobWorkState: String,
+        applName: String,
+        applEducationLevel: String,
+        applMinimumMonthlySalary: Double,
+        applLiveIn: String,
         appStatus: String,
         onSuccess: () -> Unit,
         onError: (String) -> Unit
@@ -46,6 +55,14 @@ class ApplSubmitApplicationViewModel : ViewModel() {
                 nextApplyId,
                 applId,
                 jobId,
+                jobTitle,
+                empName,
+                jobCompanyEmail,
+                jobWorkState,
+                applName,
+                applEducationLevel,
+                applMinimumMonthlySalary,
+                applLiveIn,
                 appStatus
             )
 
@@ -85,45 +102,6 @@ class ApplSubmitApplicationViewModel : ViewModel() {
 
             override fun onCancelled(databaseError: DatabaseError) {
                 callback("AP1")
-            }
-        })
-    }
-
-    fun getJobTitle(jobId: String){
-        val dbRef = FirebaseDatabase.getInstance().getReference("Jobs")
-        val query = dbRef.orderByChild("jobId").equalTo(jobId)
-        query.addListenerForSingleValueEvent(object : ValueEventListener {
-            override fun onDataChange(snapshot: DataSnapshot) {
-                if (snapshot.exists()) {
-                    val jobData = snapshot.children.first().getValue(JobModel::class.java)
-                    _jobTitle.value = jobData?.jobTitle
-                }
-            }
-            override fun onCancelled(error: DatabaseError) {
-                // Handle the error if needed
-            }
-        })
-    }
-
-    fun getApplicantData(applId: String) {
-        val dbRef = FirebaseDatabase.getInstance().getReference("Applicants")
-
-        val query = dbRef.orderByChild("applId").equalTo(applId)
-
-        query.addListenerForSingleValueEvent(object : ValueEventListener {
-            override fun onDataChange(snapshot: DataSnapshot) {
-                if (snapshot.exists()) {
-                    val applData = snapshot.children.first().getValue(ApplicantModel::class.java)
-                    _applGender.value = applData?.applGender
-                    _applName.value = applData?.applFirstName + " " + applData?.applLastName
-                    _applEmail.value = applData?.applEmail
-                    _applPhoneNum.value = "+${applData?.applAreaCode?.replace(Regex("[^\\d]"), "")}"
-                    _applPhoneNum.value = _applPhoneNum.value + " " + applData?.applPhoneNumber
-                }
-            }
-
-            override fun onCancelled(error: DatabaseError) {
-                // Handle the error if needed
             }
         })
     }

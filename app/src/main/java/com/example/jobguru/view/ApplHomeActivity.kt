@@ -109,6 +109,7 @@ class ApplHomeActivity : AppCompatActivity() {
 
                         intent.apply {
                             putExtra("jobId", jobItem.jobId)
+                            putExtra("jobTitle", jobItem.jobTitle)
                         }
                         startActivity(intent)
                     } else {
