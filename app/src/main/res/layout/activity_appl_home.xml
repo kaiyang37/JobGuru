@@ -57,7 +57,7 @@
                     android:id="@+id/rvJob"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="20dp"
+                    android:layout_marginBottom="25dp"
                     tools:listitem="@layout/appl_job_list_item" />
             </LinearLayout>
         </ScrollView>

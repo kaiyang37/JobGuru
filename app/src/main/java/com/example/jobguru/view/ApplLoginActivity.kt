@@ -1,6 +1,7 @@
 package com.example.jobguru.view
 
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
@@ -50,9 +51,11 @@ class ApplLoginActivity : AppCompatActivity() {
                 val editor = sharedPreferences.edit()
                 editor.putString("loginEmail", binding.emailTextBox.text.toString())
                 editor.apply()
-                replaceFragment(ApplLocationFragment())
-//                val intent = Intent(this, ApplHomeActivity::class.java)
-//                startActivity(intent)
+                val intent = Intent(this, ApplMainActivity::class.java)
+                startActivity(intent)
+                finish()
+            } else{
+                binding.textInputLayoutEmail.error = "This email does not belong to an applicant"
             }
         }
     }

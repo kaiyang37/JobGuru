@@ -29,37 +29,40 @@ class ApplSubmitApplicationActivity : AppCompatActivity() {
         val applId = sharedPreferences.getString("applId", "")
         val jobId = sharedPreferences.getString("applyJobId", "")
 
-        if (applId != null) {
-            viewModel.getApplicantData(applId)
+        // Obtain data from previous activity
+        val jobTitle = intent.getStringExtra("jobTitle").toString()
+        val applName = intent.getStringExtra("applName").toString()
+        val applEmail = intent.getStringExtra("applEmail").toString()
+        val applEducationLevel = intent.getStringExtra("applEducationLevel").toString()
+        val applMinimumMonthlySalary = intent.getStringExtra("applMinimumMonthlySalary").toString()
+        var applMinMonthlySalary = 0.0
+        if (applMinimumMonthlySalary != null && applMinimumMonthlySalary.isNotEmpty() && !applMinimumMonthlySalary.equals(
+                "null",
+                ignoreCase = true
+            )
+        ) {
+            applMinMonthlySalary = applMinimumMonthlySalary.toDouble()
+        }
+        val applLiveIn = intent.getStringExtra("applLiveIn").toString()
+        val applGender = intent.getStringExtra("applGender").toString()
+        val applPhoneNum = intent.getStringExtra("applPhoneNum").toString()
+        val jobCompanyName = intent.getStringExtra("jobCompanyName").toString()
+        val jobWorkState = intent.getStringExtra("jobWorkState").toString()
+        val jobCompanyEmail = intent.getStringExtra("jobCompanyEmail").toString()
+
+        if (applGender.equals("Male")) {
+            binding.maleAvatar.visibility = View.VISIBLE
+        } else {
+            binding.femaleAvatar.visibility = View.VISIBLE
         }
 
-        if (jobId != null) {
-            viewModel.getJobTitle(jobId)
-        }
+        binding.applName.text = applName
 
-        viewModel.applGender.observe(this) { applGender ->
-            if (applGender.equals("Male")) {
-                binding.maleAvatar.visibility = View.VISIBLE
-            } else {
-                binding.femaleAvatar.visibility = View.VISIBLE
-            }
-        }
+        binding.applEmail.text = applEmail
 
-        viewModel.applName.observe(this) { applName ->
-            binding.applName.text = applName
-        }
+        binding.applPhoneNum.text = applPhoneNum
 
-        viewModel.applEmail.observe(this) { applEmail ->
-            binding.applEmail.text = applEmail
-        }
-
-        viewModel.applPhoneNum.observe(this) { applPhoneNum ->
-            binding.applPhoneNum.text = applPhoneNum
-        }
-
-        viewModel.jobTitle.observe(this) { jobTitle ->
-            binding.applyJobTitle.text = jobTitle
-        }
+        binding.applyJobTitle.text = jobTitle
 
         binding.manageProfileBtn.setOnClickListener {
             startActivity(Intent(this, ApplManageProfileActivity::class.java))
@@ -70,14 +73,26 @@ class ApplSubmitApplicationActivity : AppCompatActivity() {
 
             if (applId != null) {
                 if (jobId != null) {
-                    viewModel.submitApplication(applId, jobId, appStatus, onSuccess = {
-//                        Toast.makeText(this, "Application Submitted", Toast.LENGTH_LONG).show()
-                        val intent = Intent(this, ApplSentApplicationActivity::class.java)
-                        startActivity(intent)
-                        finish()
-                    }, onError = { errorMessage ->
-                        Toast.makeText(this, errorMessage, Toast.LENGTH_LONG).show()
-                    })
+                    viewModel.submitApplication(
+                        applId,
+                        jobId,
+                        jobTitle,
+                        jobCompanyName,
+                        jobCompanyEmail,
+                        jobWorkState,
+                        applName,
+                        applEducationLevel,
+                        applMinMonthlySalary,
+                        applLiveIn,
+                        appStatus,
+                        onSuccess = {
+                            val intent = Intent(this, ApplSentApplicationActivity::class.java)
+                            startActivity(intent)
+                            finish()
+                        },
+                        onError = { errorMessage ->
+                            Toast.makeText(this, errorMessage, Toast.LENGTH_LONG).show()
+                        })
                 }
             }
 

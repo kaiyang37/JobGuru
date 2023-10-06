@@ -26,7 +26,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Log in or Sign up to apply for this job"
+                android:text="Log in or Sign up to apply or save this job"
                 android:textStyle="bold"
                 android:layout_marginHorizontal="5sp"
                 android:textAlignment="center"
