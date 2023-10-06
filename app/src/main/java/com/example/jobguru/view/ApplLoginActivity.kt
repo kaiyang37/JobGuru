@@ -1,5 +1,6 @@
 package com.example.jobguru.view
 
+import android.app.ProgressDialog
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
@@ -14,6 +15,7 @@ class ApplLoginActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityApplLoginBinding
     private lateinit var viewModel: ApplLoginViewModel
+    private lateinit var progressDialog: ProgressDialog
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -26,11 +28,15 @@ class ApplLoginActivity : AppCompatActivity() {
 
         viewModel = ViewModelProvider(this).get(ApplLoginViewModel::class.java)
 
+        progressDialog = ProgressDialog(this)
+        progressDialog.setMessage("Logging in")
+
         binding.loginBtn.setOnClickListener {
             val email = binding.emailTextBox.text.toString()
             val password = binding.passwordTextBox.text.toString()
 
             if (viewModel.validateData(email, password)) {
+                progressDialog.show()
                 viewModel.applLogin(email, password, this)
             }
 
@@ -39,10 +45,12 @@ class ApplLoginActivity : AppCompatActivity() {
         // Observe error messages and update UI accordingly
         viewModel.emailError.observe(this) { errorMessage ->
             binding.textInputLayoutEmail.error = errorMessage
+            progressDialog.dismiss()
         }
 
         viewModel.passwordError.observe(this) { errorMessage ->
             binding.textInputLayoutPassword.error = errorMessage
+            progressDialog.dismiss()
         }
 
         viewModel.loginSuccess.observe(this) { isSuccess ->
@@ -51,10 +59,12 @@ class ApplLoginActivity : AppCompatActivity() {
                 val editor = sharedPreferences.edit()
                 editor.putString("loginEmail", binding.emailTextBox.text.toString())
                 editor.apply()
-                val intent = Intent(this, ApplMainActivity::class.java)
+                progressDialog.dismiss()
+                val intent = Intent(this, ApplHomeActivity::class.java)
                 startActivity(intent)
                 finish()
             } else{
+                progressDialog.dismiss()
                 binding.textInputLayoutEmail.error = "This email does not belong to an applicant"
             }
         }

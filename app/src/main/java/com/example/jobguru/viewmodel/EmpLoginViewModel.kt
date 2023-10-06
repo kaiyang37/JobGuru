@@ -75,12 +75,14 @@ class EmpLoginViewModel : ViewModel() {
             override fun onDataChange(dataSnapshot: DataSnapshot) {
                 if (!dataSnapshot.exists()) {
                     _loginSuccess.value = false
+                    _emailError.value = "This email address does not belong to an employer"
                 } else {
                     auth.signInWithEmailAndPassword(email, password)
                         .addOnCompleteListener { task ->
                             if (task.isSuccessful) {
                                 _loginSuccess.value = true
                             } else {
+                                _loginSuccess.value = false
                                 handleLoginError(task.exception, context)
                             }
                         }

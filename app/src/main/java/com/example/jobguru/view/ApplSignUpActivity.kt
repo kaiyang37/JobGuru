@@ -1,5 +1,6 @@
 package com.example.jobguru.view
 
+import android.app.ProgressDialog
 import android.content.Context
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -16,6 +17,7 @@ import com.example.jobguru.viewmodel.ApplSignUpViewModel
 class ApplSignUpActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
     private lateinit var binding: ActivityApplSignUpBinding
     private lateinit var viewModel: ApplSignUpViewModel
+    private lateinit var progressDialog: ProgressDialog
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -36,6 +38,8 @@ class ApplSignUpActivity : AppCompatActivity(), AdapterView.OnItemSelectedListen
 
         viewModel = ViewModelProvider(this).get(ApplSignUpViewModel::class.java)
 
+        progressDialog = ProgressDialog(this)
+        progressDialog.setMessage("Signing up")
         binding.signUpBtn.setOnClickListener {
             val firstName = binding.firstNameTextBox.text.toString()
             val lastName = binding.lastNameTextBox.text.toString()
@@ -43,6 +47,7 @@ class ApplSignUpActivity : AppCompatActivity(), AdapterView.OnItemSelectedListen
             val password = binding.passwordTextBox.text.toString()
 
             if (viewModel.validateData(firstName, lastName, email, password)) {
+                progressDialog.show()
                 viewModel.applSignUp(email, password)
             }
         }
@@ -50,18 +55,22 @@ class ApplSignUpActivity : AppCompatActivity(), AdapterView.OnItemSelectedListen
         // Observe error messages and update UI accordingly
         viewModel.firstNameError.observe(this) { errorMessage ->
             binding.textInputLayoutFirstName.error = errorMessage
+            progressDialog.dismiss()
         }
 
         viewModel.lastNameError.observe(this) { errorMessage ->
             binding.textInputLayoutLastName.error = errorMessage
+            progressDialog.dismiss()
         }
 
         viewModel.emailError.observe(this) { errorMessage ->
             binding.textInputLayoutEmail.error = errorMessage
+            progressDialog.dismiss()
         }
 
         viewModel.passwordError.observe(this) { errorMessage ->
             binding.textInputLayoutPassword.error = errorMessage
+            progressDialog.dismiss()
         }
 
         // Observe registration success
@@ -71,6 +80,7 @@ class ApplSignUpActivity : AppCompatActivity(), AdapterView.OnItemSelectedListen
                 val editor = sharedPreferences.edit()
                 editor.putString("loginEmail", binding.emailTextBox.text.toString())
                 editor.apply()
+                progressDialog.dismiss()
                 saveApplicantData()
             }
         }
@@ -78,8 +88,10 @@ class ApplSignUpActivity : AppCompatActivity(), AdapterView.OnItemSelectedListen
         // Observe registration error
         viewModel.dbErrorText.observe(this) { errorMessage ->
             if (errorMessage.contains("An error occurred:")) {
+                progressDialog.dismiss()
                 Toast.makeText(this, errorMessage, Toast.LENGTH_SHORT).show()
             } else {
+                progressDialog.dismiss()
                 // Handle the error message, show it to the user, update UI, etc.
                 binding.textInputLayoutEmail.error = errorMessage
             }

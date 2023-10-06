@@ -9,6 +9,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.example.jobguru.R
 import com.example.jobguru.databinding.ActivityEmpProfileBinding
 import com.example.jobguru.viewmodel.EmpProfileViewModel
+import com.example.jobguru.viewmodel.EmpProfileViewModelFactory
 
 class EmpProfileActivity : AppCompatActivity() {
     private lateinit var binding: ActivityEmpProfileBinding
@@ -19,11 +20,11 @@ class EmpProfileActivity : AppCompatActivity() {
         binding = ActivityEmpProfileBinding.inflate(layoutInflater)
         setContentView(binding.root)
         bottomNavigationBar()
-        viewModel = ViewModelProvider(this).get(EmpProfileViewModel::class.java)
+        viewModel = ViewModelProvider(this, EmpProfileViewModelFactory(this)).get(EmpProfileViewModel::class.java)
         val sharedPreferences = this.getSharedPreferences("MyPrefs", Context.MODE_PRIVATE)
         val empEmail = sharedPreferences.getString("personInChargeEmail", "") ?: ""
 
-        viewModel.getProfileData(empEmail)
+        viewModel.getProfileData(empEmail, this)
 
         var eName = ""
         var eIndustry = ""
@@ -79,36 +80,55 @@ class EmpProfileActivity : AppCompatActivity() {
         })
 
         binding.editProfileBtn.setOnClickListener {
-            openEditProfileFragment(
-                empEmail,
-                eName,
-                eIndustry,
-                eAddress,
-                ePostcode,
-                eState,
-                ePersonInChargeName,
-                ePersonInChargeContact,
-                ePersonInChargeDesignation,
-                ePersonInChargeGender
-            )
+
+            if(viewModel.isNetworkAvailable()){
+                openEditProfileFragment(
+                    empEmail,
+                    eName,
+                    eIndustry,
+                    eAddress,
+                    ePostcode,
+                    eState,
+                    ePersonInChargeName,
+                    ePersonInChargeContact,
+                    ePersonInChargeDesignation,
+                    ePersonInChargeGender
+                )
+            }else{
+                Toast.makeText(
+                    this,
+                    "Unable to perform this action. Please check your network connection and try again.",
+                    Toast.LENGTH_LONG
+                )
+                    .show()
+            }
         }
 
         binding.logoutBtn.setOnClickListener {
-            val sharedPreferences = getSharedPreferences("MyPrefs", Context.MODE_PRIVATE)
-            val editor = sharedPreferences.edit()
-            editor.clear()
-            editor.apply()
+            if(viewModel.isNetworkAvailable()) {
+                val sharedPreferences = getSharedPreferences("MyPrefs", Context.MODE_PRIVATE)
+                val editor = sharedPreferences.edit()
+                editor.clear()
+                editor.apply()
 
-            val intent = Intent(this, RoleActivity::class.java)
-            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-            startActivity(intent)
+                val intent = Intent(this, RoleActivity::class.java)
+                intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                startActivity(intent)
 
-            Toast.makeText(
-                this,
-                "Log Out Successfully",
-                Toast.LENGTH_LONG
-            )
-                .show()
+                Toast.makeText(
+                    this,
+                    "Log Out Successfully",
+                    Toast.LENGTH_LONG
+                )
+                    .show()
+            }else{
+                Toast.makeText(
+                    this,
+                    "Unable to perform this action. Please check your network connection and try again.",
+                    Toast.LENGTH_LONG
+                )
+                    .show()
+            }
         }
     }
 

@@ -115,7 +115,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:text=""
-                        android:textSize="12sp" />
+                        android:textSize="14sp" />
 
                     <TextView
                         android:id="@+id/tvInterviewerName"
@@ -123,7 +123,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:text=""
-                        android:textSize="12sp" />
+                        android:textSize="14sp" />
                 </LinearLayout>
 
                 <View
@@ -198,10 +198,22 @@
                     android:orientation="horizontal">
 
                     <TextView
+                        android:id="@+id/interview_venue_title"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:text="@string/interview_venue_title"
+                        android:visibility="gone"
+                        android:textSize="14sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/interview_platform_title"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="@string/interview_platform_title"
+                        android:visibility="gone"
                         android:textSize="14sp"
                         android:textStyle="bold" />
 
@@ -252,6 +264,7 @@
                     android:layout_marginHorizontal="@dimen/margin_10dp"
                     android:layout_marginTop="@dimen/margin_10dp"
                     android:text="@string/interview_rejected_reason_details"
+                    android:visibility="gone"
                     android:textSize="14sp"
                     android:textStyle="bold" />
 
@@ -261,6 +274,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginHorizontal="@dimen/margin_10dp"
                     android:layout_marginTop="5dp"
+                    android:visibility="gone"
                     android:text=""
                     android:textSize="14sp" />
             </LinearLayout>
@@ -281,7 +295,8 @@
                 android:id="@+id/resend_view"
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
-                android:background="#BEBEBE" />
+                android:background="#BEBEBE"
+                android:visibility="gone"/>
 
             <Button
                 android:id="@+id/resend_invitation_btn"
@@ -289,6 +304,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginVertical="15dp"
+                android:visibility="gone"
                 android:background="@drawable/filled_button"
                 android:text="@string/resend_invitation_btn"
                 app:backgroundTint="@null" />

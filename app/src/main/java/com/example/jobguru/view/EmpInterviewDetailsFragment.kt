@@ -20,29 +20,23 @@ class EmpInterviewDetailsFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-
-        val view = inflater.inflate(R.layout.fragment_emp_interview_details, container, false)
-
-        binding = FragmentEmpInterviewDetailsBinding.bind(view)
-        viewModel =
-            ViewModelProvider(requireActivity()).get(EmpInterviewDetailsViewModel::class.java)
+        binding = FragmentEmpInterviewDetailsBinding.inflate(inflater, container, false)
+        viewModel = ViewModelProvider(this).get(EmpInterviewDetailsViewModel::class.java)
 
         binding.upButton.setOnClickListener {
             val fragmentManager: FragmentManager = requireActivity().supportFragmentManager
             fragmentManager.popBackStack()
         }
 
-        val arguments = arguments
-        viewModel.initializeWithData(
-            arguments?.getString("intvwId") ?: "",
-            arguments?.getString("applName") ?: "",
-            arguments?.getString("jobTitle") ?: "",
-            arguments?.getString("intvwrName") ?: "",
-            arguments?.getString("intvwDate") ?: "",
-            arguments?.getString("intvwTime") ?: "",
-            arguments?.getString("intvwPlatform") ?: "",
-            arguments?.getString("intvwReason") ?: "",
-            arguments?.getString("intvwStatus") ?: ""
+        val intvwId = arguments?.getString("intvwId") ?: ""
+        val jobId = arguments?.getString("jobId") ?: ""
+        val applId = arguments?.getString("applId") ?: ""
+        val applName = arguments?.getString("applName") ?: ""
+        val empName = arguments?.getString("empName") ?: ""
+        val jobTitle = arguments?.getString("jobTitle") ?: ""
+
+        viewModel.getInterviewData(
+            intvwId
         )
 
         viewModel.jobTitle.observe(requireActivity(), { jobTitle ->
@@ -61,44 +55,57 @@ class EmpInterviewDetailsFragment : Fragment() {
             binding.tvInterviewTime.text = intvwTime
         })
         viewModel.intvwPlatform.observe(requireActivity(), { intvwPlatform ->
+            if (intvwPlatform == "Company Office" || intvwPlatform == "Conference Room") {
+                binding.interviewVenueTitle.visibility = View.VISIBLE
+            } else {
+                binding.interviewPlatformTitle.visibility = View.VISIBLE
+            }
             binding.tvInterviewPlatform.text = intvwPlatform
         })
         viewModel.intvwReason.observe(requireActivity(), { intvwReason ->
             binding.tvInterviewRejectedReason.text = intvwReason
         })
         viewModel.intvwStatus.observe(requireActivity(), { intvwStatus ->
-            binding.tvInterviewStatus.text = intvwStatus
+            viewModel.intvwIsResend.observe(requireActivity(), { intvwIsResend ->
+                binding.tvInterviewStatus.text = intvwStatus
 
-            if (!intvwStatus.equals("Rejected", ignoreCase = true)) {
-                binding.rejectedReasonTitle.visibility = View.GONE
-                binding.tvInterviewRejectedReason.visibility = View.GONE
-                binding.resendView.visibility = View.GONE
-                binding.resendInvitationBtn.visibility = View.GONE
-            }
+                if (intvwStatus.equals("Rejected", ignoreCase = true)) {
+                    binding.rejectedReasonTitle.visibility = View.VISIBLE
+                    binding.tvInterviewRejectedReason.visibility = View.VISIBLE
+                    if(!intvwIsResend) {
+                        binding.resendView.visibility = View.VISIBLE
+                        binding.resendInvitationBtn.visibility = View.VISIBLE
+                    }
+                }
+            })
         })
 
         binding.resendInvitationBtn.setOnClickListener {
-            val intvwId = viewModel.intvwId.value ?: ""
-            val applicantName = viewModel.applName.value ?: ""
-            val jobTitle = viewModel.jobTitle.value ?: ""
 
-            openSetInterviewFragment(intvwId, applicantName, jobTitle)
+            openSetInterviewFragment(intvwId, jobId, applId, applName, empName, jobTitle)
         }
 
-        return view
+        return binding.root
     }
 
     private fun openSetInterviewFragment(
         intvwId: String,
-        applicantName: String,
-        jobTitle: String,
+        jobId: String,
+        applId: String,
+        applName: String,
+        empName: String,
+        jobTitle: String
     ) {
         val empSetInterviewFragment = EmpSetInterviewFragment()
 
         val bundle = Bundle()
         bundle.putString("intvwId", intvwId)
-        bundle.putString("applName", applicantName)
+        bundle.putString("jobId", jobId)
+        bundle.putString("applId", applId)
+        bundle.putString("applName", applName)
+        bundle.putString("empName", empName)
         bundle.putString("jobTitle", jobTitle)
+        bundle.putBoolean("isResend", true)
 
         empSetInterviewFragment.arguments = bundle
 

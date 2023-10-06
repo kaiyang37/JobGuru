@@ -16,8 +16,7 @@ import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 
 class EmpApplicantAdapter(
-    private var context: Context,
-    private var applList: ArrayList<ApplicantModel>
+    private var applList: ArrayList<ApplyModel>
 ) :
     RecyclerView.Adapter<EmpApplicantAdapter.ViewHolder>() {
     private lateinit var aListener: onItemClickListener
@@ -27,8 +26,8 @@ class EmpApplicantAdapter(
     }
 
     // Update setData function to accept filtered list
-    fun setData(applList: List<ApplicantModel>) {
-        this.applList = applList as ArrayList<ApplicantModel>
+    fun setData(applList: List<ApplyModel>) {
+        this.applList = applList as ArrayList<ApplyModel>
         notifyDataSetChanged()
     }
 
@@ -45,16 +44,12 @@ class EmpApplicantAdapter(
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val currentAppl = applList[position]
-        val firstName = currentAppl.applFirstName
-        val lastName = currentAppl.applLastName
-        val fullName = "$firstName $lastName"
-
-        holder.tvApplName.text = fullName
+        holder.tvJobTitle.text = currentAppl.jobTitle
+        holder.tvApplName.text = currentAppl.applName
         holder.tvApplEducationLvl.text = currentAppl.applEducationLevel
         holder.tvApplExpectedSalary.text =
             String.format("%.2f", currentAppl.applMinimumMonthlySalary)
         holder.tvApplLiveIn.text = currentAppl.applLiveIn
-        getJobId(holder, currentAppl.applId)
     }
 
     override fun getItemCount(): Int {
@@ -75,59 +70,6 @@ class EmpApplicantAdapter(
                 clickListener.onItemClick(adapterPosition)
             }
         }
-    }
-
-    private fun getJobId(holder: ViewHolder, applId: String?) {
-        val sharedPreferences = context.getSharedPreferences("MyPrefs", Context.MODE_PRIVATE)
-        val delimitedJobIds = sharedPreferences.getString("myJobIdList", "") ?: ""
-
-        val applyRef = FirebaseDatabase.getInstance().getReference("Apply")
-        val jobIdList = delimitedJobIds.split(",")
-
-        for (jobId in jobIdList) {
-            val query = applyRef.orderByChild("jobId").equalTo(jobId)
-
-            query.addListenerForSingleValueEvent(object : ValueEventListener {
-                override fun onDataChange(dataSnapshot: DataSnapshot) {
-                    if (dataSnapshot.exists()) {
-                        for (applySnap in dataSnapshot.children) {
-                            val applyData = applySnap.getValue(ApplyModel::class.java)
-
-                            if (applyData != null && applyData.applId.equals(applId) && applyData.appStatus == "Pending") {
-                                //holder.tvJobTitle.text = jobId
-                                getJobTitle(holder, jobId)
-                            }
-                        }
-                    }
-                }
-
-                override fun onCancelled(databaseError: DatabaseError) {
-                    // Handle errors
-                    Log.e("Firebase", "Error: ${databaseError.message}")
-                }
-
-            })
-        }
-    }
-
-    private fun getJobTitle(holder: ViewHolder, jobId: String) {
-        val jobRef = FirebaseDatabase.getInstance().getReference("Jobs")
-        val jobQuery = jobRef.orderByChild("jobId").equalTo(jobId)
-
-        jobQuery.addListenerForSingleValueEvent(object : ValueEventListener {
-            override fun onDataChange(dataSnapshot: DataSnapshot) {
-                if (dataSnapshot.exists()) {
-                    // Assuming jobTitle is stored as a child under the jobId node
-                    val jobTitle = dataSnapshot.child(jobId).child("jobTitle").value.toString()
-                    holder.tvJobTitle.text = jobTitle
-                }
-            }
-
-            override fun onCancelled(databaseError: DatabaseError) {
-                // Handle errors
-                Log.e("Firebase", "Error: ${databaseError.message}")
-            }
-        })
     }
 }
 

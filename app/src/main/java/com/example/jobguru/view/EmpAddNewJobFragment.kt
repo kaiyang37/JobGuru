@@ -1,6 +1,7 @@
 package com.example.jobguru.view
 
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -62,7 +63,8 @@ class EmpAddNewJobFragment : Fragment() {
                             "$jobTitle is inserted successfully",
                             Toast.LENGTH_LONG
                         ).show()
-                        requireActivity().onBackPressed()
+                        val intent = Intent(requireContext(), EmpJobsActivity::class.java)
+                        startActivity(intent)
                     },
                     onError = { errorMessage ->
                         Toast.makeText(requireContext(), errorMessage, Toast.LENGTH_LONG).show()

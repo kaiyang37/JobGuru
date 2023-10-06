@@ -19,9 +19,15 @@ class RoleActivity : AppCompatActivity() {
         val sharedPreferences = getSharedPreferences("MyPrefs", Context.MODE_PRIVATE)
         val exploreJobsSelected = sharedPreferences.getBoolean("exploreJobsSelected", false)
         val loginEmail = sharedPreferences.getString("loginEmail", "")
+        val empEmail = sharedPreferences.getString("personInChargeEmail", "")
 
         if (exploreJobsSelected || !loginEmail.isNullOrEmpty()) {
             startActivity(Intent(this, ApplHomeActivity::class.java))
+            finish()
+        }
+
+        if(!empEmail.isNullOrEmpty()){
+            startActivity(Intent(this, EmpJobsActivity::class.java))
             finish()
         }
 

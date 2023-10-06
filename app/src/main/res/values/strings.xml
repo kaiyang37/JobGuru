@@ -283,7 +283,9 @@
     <string name="send_invitation_btn">Send Invitation</string>
     <string name="interview_date_title">Interview Date</string>
     <string name="interview_time_title">Interview Time</string>
-    <string name="interview_venue_title">Interview Venue or Platform</string>
+    <string name="interview_venue_title">Interview Venue</string>
+    <string name="interview_platform_title">Interview Platform</string>
+    <string name="interview_venue_platform_title">Interview Venue or Platform</string>
     <string name="interviewer_name_title">Interviewer Name</string>
     <string name="interviewer_name_field">Enter interviewer name</string>
     <string name="interviews_view_title">Interviews</string>

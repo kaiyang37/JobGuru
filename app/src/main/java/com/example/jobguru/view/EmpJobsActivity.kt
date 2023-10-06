@@ -34,7 +34,7 @@ class EmpJobsActivity : AppCompatActivity() {
         val empEmail = sharedPreferences.getString("personInChargeEmail", "") ?: ""
         viewModel = ViewModelProvider(
             this,
-            EmpJobsViewModelFactory(empEmail)
+            EmpJobsViewModelFactory(empEmail, this)
         ).get(EmpJobsViewModel::class.java)
 
         bottomNavigationBar()
@@ -92,27 +92,36 @@ class EmpJobsActivity : AppCompatActivity() {
 
         jAdapter.setOnItemClickListener(object : EmpJobAdapter.onItemClickListener {
             override fun onItemClick(position: Int) {
-                val jobListToUse =
-                    if (viewModel.searchedJobList.value != null && position < viewModel.searchedJobList.value!!.size) {
-                        viewModel.searchedJobList.value!!
+                if(viewModel.isNetworkAvailable()) {
+                    val jobListToUse =
+                        if (viewModel.searchedJobList.value != null && position < viewModel.searchedJobList.value!!.size) {
+                            viewModel.searchedJobList.value!!
+                        } else {
+                            viewModel.jobList.value ?: emptyList()
+                        }
+
+                    if (position < jobListToUse.size) {
+                        val intent = Intent(this@EmpJobsActivity, EmpJobDetailsActivity::class.java)
+                        val jobItem = jobListToUse[position]
+
+                        intent.apply {
+                            putExtra("jobId", jobItem.jobId)
+                        }
+                        startActivity(intent)
                     } else {
-                        viewModel.jobList.value ?: emptyList()
+                        Toast.makeText(
+                            this@EmpJobsActivity,
+                            "Selected job details is not found.",
+                            Toast.LENGTH_SHORT
+                        ).show()
                     }
-
-                if (position < jobListToUse.size) {
-                    val intent = Intent(this@EmpJobsActivity, EmpJobDetailsActivity::class.java)
-                    val jobItem = jobListToUse[position]
-
-                    intent.apply {
-                        putExtra("jobId", jobItem.jobId)
-                    }
-                    startActivity(intent)
-                } else {
+                }else{
                     Toast.makeText(
                         this@EmpJobsActivity,
-                        "Selected job details is not found.",
-                        Toast.LENGTH_SHORT
-                    ).show()
+                        "Unable to perform this action. Please check your network connection and try again.",
+                        Toast.LENGTH_LONG
+                    )
+                        .show()
                 }
             }
 
@@ -120,7 +129,16 @@ class EmpJobsActivity : AppCompatActivity() {
         })
 
         binding.addNewJobBtn.setOnClickListener {
-            callAddJobForm()
+            if(viewModel.isNetworkAvailable()) {
+                callAddJobForm()
+            }else{
+                Toast.makeText(
+                    this,
+                    "Unable to perform this action. Please check your network connection and try again.",
+                    Toast.LENGTH_LONG
+                )
+                    .show()
+            }
         }
 
 

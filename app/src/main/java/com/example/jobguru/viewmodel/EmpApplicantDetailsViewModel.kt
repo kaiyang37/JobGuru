@@ -14,87 +14,66 @@ import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.ktx.getValue
 
-class EmpApplicantDetailsViewModel: ViewModel() {
-
+class EmpApplicantDetailsViewModel : ViewModel() {
     private val _applFirstName = MutableLiveData<String>()
-    val applFirstName: LiveData<String>
-        get() = _applFirstName
+    val applFirstName: LiveData<String> = _applFirstName
 
     private val _applLastName = MutableLiveData<String>()
-    val applLastName: LiveData<String>
-        get() = _applLastName
+    val applLastName: LiveData<String> = _applLastName
 
     private val _applGender = MutableLiveData<String>()
-    val applGender: LiveData<String>
-        get() = _applGender
+    val applGender: LiveData<String> = _applGender
 
     private val _applEmail = MutableLiveData<String>()
-    val applEmail: LiveData<String>
-        get() = _applEmail
+    val applEmail: LiveData<String> = _applEmail
 
     private val _applLiveIn = MutableLiveData<String>()
-    val applLiveIn: LiveData<String>
-        get() = _applLiveIn
+    val applLiveIn: LiveData<String> = _applLiveIn
 
     private val _applAreaCode = MutableLiveData<String>()
-    val applAreaCode: LiveData<String>
-        get() = _applAreaCode
+    val applAreaCode: LiveData<String> = _applAreaCode
 
     private val _applPhoneNumber = MutableLiveData<String>()
-    val applPhoneNumber: LiveData<String>
-        get() = _applPhoneNumber
+    val applPhoneNumber: LiveData<String> = _applPhoneNumber
 
     private val _applNationality = MutableLiveData<String>()
-    val applNationality: LiveData<String>
-        get() = _applNationality
+    val applNationality: LiveData<String> = _applNationality
 
     private val _applMinimumMonthlySalary = MutableLiveData<Double>()
-    val applMinimumMonthlySalary: LiveData<Double>
-        get() = _applMinimumMonthlySalary
+    val applMinimumMonthlySalary: LiveData<Double> = _applMinimumMonthlySalary
 
     private val _applEducationLevel = MutableLiveData<String>()
-    val applEducationLevel: LiveData<String>
-        get() = _applEducationLevel
+    val applEducationLevel: LiveData<String> = _applEducationLevel
 
     private val _applInstitute = MutableLiveData<String>()
-    val applInstitute: LiveData<String>
-        get() = _applInstitute
+    val applInstitute: LiveData<String> = _applInstitute
 
     private val _applFieldOfStudies = MutableLiveData<String>()
-    val applFieldOfStudies: LiveData<String>
-        get() = _applFieldOfStudies
+    val applFieldOfStudies: LiveData<String> = _applFieldOfStudies
 
     private val _applLocation = MutableLiveData<String>()
-    val applLocation: LiveData<String>
-        get() = _applLocation
+    val applLocation: LiveData<String> = _applLocation
 
     private val _applYearOfGraduation = MutableLiveData<String>()
-    val applYearOfGraduation: LiveData<String>
-        get() = _applYearOfGraduation
+    val applYearOfGraduation: LiveData<String> = _applYearOfGraduation
 
     private val _applMonthOfGraduation = MutableLiveData<String>()
-    val applMonthOfGraduation: LiveData<String>
-        get() = _applMonthOfGraduation
+    val applMonthOfGraduation: LiveData<String> = _applMonthOfGraduation
 
     private val _applJobTitle = MutableLiveData<String>()
-    val applJobTitle: LiveData<String>
-        get() = _applJobTitle
+    val applJobTitle: LiveData<String> = _applJobTitle
 
     private val _applCompanyName = MutableLiveData<String>()
-    val applCompanyName: LiveData<String>
-        get() = _applCompanyName
+    val applCompanyName: LiveData<String> = _applCompanyName
 
     private val _applStartDate = MutableLiveData<String>()
-    val applStartDate: LiveData<String>
-        get() = _applStartDate
+    val applStartDate: LiveData<String> = _applStartDate
 
     private val _applEndDate = MutableLiveData<String>()
-    val applEndDate: LiveData<String>
-        get() = _applEndDate
+    val applEndDate: LiveData<String> = _applEndDate
 
     private val _applCompanyIndustry = MutableLiveData<String>()
-    val applCompanyIndustry: LiveData<String>
-        get() = _applCompanyIndustry
+    val applCompanyIndustry: LiveData<String> = _applCompanyIndustry
 
     fun getApplicantData(applId: String) {
         val dbRef = FirebaseDatabase.getInstance().getReference("Applicants")
@@ -104,7 +83,8 @@ class EmpApplicantDetailsViewModel: ViewModel() {
         query.addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 if (snapshot.exists()) {
-                    val applicantData = snapshot.children.first().getValue(ApplicantModel::class.java)
+                    val applicantData =
+                        snapshot.children.first().getValue(ApplicantModel::class.java)
                     _applFirstName.value = applicantData?.applFirstName
                     _applLastName.value = applicantData?.applLastName
                     _applGender.value = applicantData?.applGender
@@ -130,68 +110,31 @@ class EmpApplicantDetailsViewModel: ViewModel() {
 
             override fun onCancelled(error: DatabaseError) {
                 // Handle the error if needed
+                Log.e("Firebase", "Error: ${error.message}")
             }
         })
     }
 
-    fun rejectApplicant(applId: String, delimitedJobIds: String){
-            val applyRef = FirebaseDatabase.getInstance().getReference("Apply")
-            val jobIdList = delimitedJobIds.split(",")
-
-            for (jobId in jobIdList) {
-                val query = applyRef.orderByChild("jobId").equalTo(jobId)
-
-                query.addListenerForSingleValueEvent(object : ValueEventListener {
-                    override fun onDataChange(dataSnapshot: DataSnapshot) {
-                        if (dataSnapshot.exists()) {
-                            for (applySnap in dataSnapshot.children) {
-                                val applyData = applySnap.getValue(ApplyModel::class.java)
-
-                                if (applyData != null && applyData.applId.equals(applId) && applyData.appStatus == "Pending") {
-                                    updateApplyStatus(applId, jobId)
-                                    Log.d("My Tag", "Yes")
-                                }
-                            }
-                        }
-                    }
-
-                    override fun onCancelled(databaseError: DatabaseError) {
-                        // Handle errors
-                        Log.e("Firebase", "Error: ${databaseError.message}")
-                    }
-
-                })
-            }
-        }
-    fun updateApplyStatus(applId: String, jobId: String) {
-        val dbRef = FirebaseDatabase.getInstance().getReference("Apply")
-        val query = dbRef.orderByChild("applId").equalTo(applId)
+    fun rejectApplicant(
+        appId: String, onSuccess: () -> Unit,
+        onError: (String) -> Unit
+    ) {
+        val applyRef = FirebaseDatabase.getInstance().getReference("Apply")
+        val query = applyRef.orderByChild("appId").equalTo(appId)
 
         query.addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onDataChange(dataSnapshot: DataSnapshot) {
                 if (dataSnapshot.exists()) {
-                    // Loop through the matching records (there may be multiple with the same applId)
-                    for (applySnapshot in dataSnapshot.children) {
-                        val applyData = applySnapshot.getValue(ApplyModel::class.java)
-                        if (applyData != null && applyData.jobId == jobId) {
-                            // Get a reference to the specific record and update appStatus
-                            val specificRecordRef = dbRef.child(applySnapshot.key!!)
-                            val updateData = HashMap<String, Any?>()
-                            updateData["appStatus"] = "Rejected"
-
-                            specificRecordRef.updateChildren(updateData)
-                                .addOnSuccessListener {
-                                    // Update was successful
-                                    Log.d("My Tag", "Update appStatus success")
-                                }
-                                .addOnFailureListener { e ->
-                                    // Handle the error
-                                    Log.e("Firebase", "Error updating appStatus: ${e.message}")
-                                }
+                    for (applicantSnapshot in dataSnapshot.children) {
+                        val updateData = HashMap<String, Any?>()
+                        updateData["appStatus"] = "Rejected"
+                        val specificRecordRef = applicantSnapshot.ref
+                        specificRecordRef.updateChildren(updateData).addOnCompleteListener{
+                            onSuccess()
+                        }.addOnFailureListener{
+                            onError("Error rejecting the applicant")
                         }
                     }
-                } else {
-                    Log.d("My Tag", "Does not exist")
                 }
             }
 

@@ -7,6 +7,7 @@ import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
+import android.view.WindowManager
 import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import androidx.databinding.DataBindingUtil
@@ -20,6 +21,7 @@ import com.example.jobguru.view.EmpProfileActivity
 import com.example.jobguru.R
 import com.example.jobguru.databinding.ActivityEmpApplicantsBinding
 import com.example.jobguru.databinding.ActivityEmpInterviewsBinding
+import com.example.jobguru.viewmodel.EmpInterviewViewModelFactory
 
 class EmpInterviewActivity : AppCompatActivity() {
     private lateinit var binding: ActivityEmpInterviewsBinding
@@ -31,7 +33,14 @@ class EmpInterviewActivity : AppCompatActivity() {
         binding = ActivityEmpInterviewsBinding.inflate(layoutInflater)
         setContentView(binding.root)
         bottomNavigationBar()
-//        binding = DataBindingUtil.setContentView(this, R.layout.activity_emp_interviews)
+
+        val sharedPreferences = this.getSharedPreferences("MyPrefs", Context.MODE_PRIVATE)
+        val delimitedJobIds = sharedPreferences.getString("myJobIdList", "") ?: ""
+        viewModel =
+            ViewModelProvider(this, EmpInterviewViewModelFactory(delimitedJobIds, this)).get(
+                EmpInterviewViewModel::class.java
+            )
+
         binding.searchInterviewsField.setOnClickListener {
             binding.searchInterviewsField.isFocusableInTouchMode = true
             binding.searchInterviewsField.requestFocus()
@@ -77,47 +86,51 @@ class EmpInterviewActivity : AppCompatActivity() {
 
         iAdapter.setOnItemClickListener(object : EmpInterviewAdapter.onItemClickListener {
             override fun onItemClick(position: Int) {
-                val interviewListToUse =
-                    if (viewModel.searchedInterviewList.value != null && position < viewModel.searchedInterviewList.value!!.size) {
-                        viewModel.searchedInterviewList.value!!
+                if (viewModel.isNetworkAvailable()) {
+                    val interviewListToUse =
+                        if (viewModel.searchedInterviewList.value != null && position < viewModel.searchedInterviewList.value!!.size) {
+                            viewModel.searchedInterviewList.value!!
+                        } else {
+                            viewModel.interviewList.value ?: emptyList()
+                        }
+
+                    if (position < interviewListToUse.size) {
+
+                        val interviewDetailsFragment = EmpInterviewDetailsFragment()
+                        val interviewItem = interviewListToUse[position]
+
+                        val bundle = Bundle()
+                        bundle.putString("intvwId", interviewItem.intvwId)
+                        bundle.putString("jobId", interviewItem.jobId)
+                        bundle.putString("applId", interviewItem.applId)
+                        bundle.putString("applName", interviewItem.applName)
+                        bundle.putString("empName", interviewItem.empName)
+                        bundle.putString("jobTitle", interviewItem.jobTitle)
+
+                        interviewDetailsFragment.arguments = bundle
+
+                        val transaction = supportFragmentManager.beginTransaction()
+                        transaction.replace(R.id.fragmentContainer, interviewDetailsFragment)
+                        transaction.addToBackStack(null)
+                        transaction.commit()
                     } else {
-                        viewModel.interviewList.value ?: emptyList()
+                        Toast.makeText(
+                            this@EmpInterviewActivity,
+                            "Selected interview details is not found.",
+                            Toast.LENGTH_SHORT
+                        ).show()
                     }
-
-                if (position < interviewListToUse.size) {
-
-                    val interviewDetailsFragment = EmpInterviewDetailsFragment()
-                    val interviewItem = interviewListToUse[position]
-
-                    val bundle = Bundle()
-                    bundle.putString("intvwId", interviewItem.intvwId)
-                    bundle.putString("applName", interviewItem.applName)
-                    bundle.putString("jobTitle", interviewItem.jobTitle)
-                    bundle.putString("intvwrName", interviewItem.intvwrName)
-                    bundle.putString("intvwDate", interviewItem.intvwDate)
-                    bundle.putString("intvwTime", interviewItem.intvwTime)
-                    bundle.putString("intvwPlatform", interviewItem.intvwPlatform)
-                    bundle.putString("intvwReason", interviewItem.intvwReason)
-                    bundle.putString("intvwStatus", interviewItem.intvwStatus)
-
-                    interviewDetailsFragment.arguments = bundle
-
-                    val transaction = supportFragmentManager.beginTransaction()
-                    transaction.replace(R.id.fragmentContainer, interviewDetailsFragment)
-                    transaction.addToBackStack(null) // Optional: Add the transaction to the back stack
-                    transaction.commit()
                 } else {
                     Toast.makeText(
                         this@EmpInterviewActivity,
-                        "Interview not found or list is empty.",
-                        Toast.LENGTH_SHORT
-                    ).show()
+                        "Unable to perform this action. Please check your network connection and try again.",
+                        Toast.LENGTH_LONG
+                    )
+                        .show()
                 }
             }
-
-
         })
-
+        window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN)
     }
 
     private fun bottomNavigationBar() {

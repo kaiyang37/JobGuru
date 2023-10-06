@@ -34,9 +34,7 @@ class EmpSetInterviewFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val view = inflater.inflate(R.layout.fragment_emp_set_interview, container, false)
-
-        binding = FragmentEmpSetInterviewBinding.bind(view)
+        binding = FragmentEmpSetInterviewBinding.inflate(inflater, container, false)
         viewModel = ViewModelProvider(this).get(EmpSetInterviewViewModel::class.java)
 
         binding.upButton.setOnClickListener {
@@ -54,47 +52,70 @@ class EmpSetInterviewFragment : Fragment() {
 
         binding.sendInvitationBtn.setOnClickListener {
             val interviewerName = binding.interviewerNameField.text.toString()
-
-            //val arguments = arguments
-            val intvwId = arguments?.getString("intvwId")?:""
-            val applName = arguments?.getString("applName")?:""
-            val applId = arguments?.getString("applId")?:""
-            val delimitedJobIds = arguments?.getString("delimitedJobIds")?:""
-
+            val intvwId = arguments?.getString("intvwId") ?: ""
+            val appId = arguments?.getString("appId") ?: ""
+            val jobId = arguments?.getString("jobId") ?: ""
+            val applId = arguments?.getString("applId") ?: ""
+            val applName = arguments?.getString("applName") ?: ""
+            val empName = arguments?.getString("empName") ?: ""
+            val jobTitle = arguments?.getString("jobTitle") ?: ""
+            val isResend = arguments?.getBoolean("isResend") ?: false
             val selectedDate = viewModel.selectedDate
             val selectedTime = viewModel.selectedTime
 
-
-            val jobTitle = viewModel.getJobId(applId, delimitedJobIds)
-
-            viewModel.saveInterviewData(
-                intvwId,
-                applName,
-                jobTitle,
-                interviewerName,
-                selectedDate, selectedTime,
-                onSuccess = {
-                    Toast.makeText(
-                        requireContext(),
-                        "Data inserted successfully",
-                        Toast.LENGTH_LONG
-                    ).show()
-                    binding.interviewerNameField.text.clear()
-                    requireActivity().finish()
-                    val intent = Intent(requireContext(), EmpInterviewActivity::class.java)
-                    startActivity(intent)
-                },
-                onError = { errorMessage ->
-                    Toast.makeText(requireContext(), errorMessage, Toast.LENGTH_LONG).show()
-                }
+            if (viewModel.validateData(
+                    interviewerName, selectedDate, selectedTime
+                )
             )
+                viewModel.saveInterviewData(
+                    jobId,
+                    applId,
+                    applName,
+                    empName,
+                    jobTitle,
+                    interviewerName,
+                    selectedDate, selectedTime,
+                    onSuccess = {
+                        if (appId.isNotEmpty()) {
+                            viewModel.acceptApplicant(appId)
+                        }
+                        if (intvwId.isNotEmpty() && isResend) {
+                            viewModel.updateResendStatus(intvwId, isResend)
+                        }
+                        Toast.makeText(
+                            requireContext(),
+                            "Interview session sent successfully for $applName",
+                            Toast.LENGTH_LONG
+                        ).show()
+                        val intent = Intent(requireContext(), EmpInterviewActivity::class.java)
+                        startActivity(intent)
+                    },
+                    onError = { errorMessage ->
+                        Toast.makeText(requireContext(), errorMessage, Toast.LENGTH_LONG).show()
+                    }
+                )
+        }
+
+        viewModel.interviewerNameError.observe(requireActivity()) { errorMessage ->
+            binding.interviewerNameErrorMessage.text = errorMessage
+            binding.interviewerNameErrorMessage.visibility = View.VISIBLE
+        }
+
+        viewModel.interviewDateError.observe(requireActivity()) { errorMessage ->
+            binding.interviewDateErrorMessage.text = errorMessage
+            binding.interviewDateErrorMessage.visibility = View.VISIBLE
+        }
+
+        viewModel.interviewTimeError.observe(requireActivity()) { errorMessage ->
+            binding.interviewTimeErrorMessage.text = errorMessage
+            binding.interviewTimeErrorMessage.visibility = View.VISIBLE
         }
 
         interviewPlatformSpinner()
 
         requireActivity().window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN)
 
-        return view
+        return binding.root
     }
 
     private fun showDatePickerDialog() {

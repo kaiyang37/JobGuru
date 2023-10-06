@@ -34,7 +34,7 @@ class EmpApplicantsActivity : AppCompatActivity() {
 
         val sharedPreferences = this.getSharedPreferences("MyPrefs", Context.MODE_PRIVATE)
         val delimitedJobIds = sharedPreferences.getString("myJobIdList", "") ?: ""
-        viewModel = ViewModelProvider(this, EmpApplicantsViewModelFactory(delimitedJobIds)).get(
+        viewModel = ViewModelProvider(this, EmpApplicantsViewModelFactory(delimitedJobIds, this)).get(
             EmpApplicantsViewModel::class.java
         )
 
@@ -64,7 +64,7 @@ class EmpApplicantsActivity : AppCompatActivity() {
 
         binding.rvApplicants.layoutManager = LinearLayoutManager(this)
         binding.rvApplicants.setHasFixedSize(true)
-        aAdapter = EmpApplicantAdapter(this, ArrayList())
+        aAdapter = EmpApplicantAdapter(ArrayList())
         binding.rvApplicants.adapter = aAdapter
 
         viewModel.searchedApplList.observe(this, { applList ->
@@ -79,39 +79,49 @@ class EmpApplicantsActivity : AppCompatActivity() {
 
         aAdapter.setOnItemClickListener(object : EmpApplicantAdapter.onItemClickListener {
             override fun onItemClick(position: Int) {
-                val applListToUse =
-                    if (viewModel.searchedApplList.value != null && position < viewModel.searchedApplList.value!!.size) {
-                        viewModel.searchedApplList.value!!
+                if (viewModel.isNetworkAvailable()) {
+                    val applListToUse =
+                        if (viewModel.searchedApplList.value != null && position < viewModel.searchedApplList.value!!.size) {
+                            viewModel.searchedApplList.value!!
+                        } else {
+                            viewModel.applList.value ?: emptyList()
+                        }
+
+                    if (position < applListToUse.size) {
+                        val applicantDetailsFragment = EmpApplicantDetailsFragment()
+                        val applItem = applListToUse[position]
+
+                        val bundle = Bundle()
+                        bundle.putString("applId", applItem.applId)
+                        bundle.putString("jobId", applItem.jobId)
+                        bundle.putString("appId", applItem.appId)
+                        bundle.putString("jobTitle", applItem.jobTitle)
+                        bundle.putString("empName", applItem.empName)
+
+                        applicantDetailsFragment.arguments = bundle
+
+                        val transaction = supportFragmentManager.beginTransaction()
+                        transaction.replace(R.id.fragmentContainer, applicantDetailsFragment)
+                        transaction.addToBackStack(null)
+                        transaction.commit()
+
                     } else {
-                        viewModel.applList.value ?: emptyList()
+                        Toast.makeText(
+                            this@EmpApplicantsActivity,
+                            "Selected applicant details is not found.",
+                            Toast.LENGTH_SHORT
+                        ).show()
                     }
-
-                if (position < applListToUse.size) {
-                    val applicantDetailsFragment = EmpApplicantDetailsFragment()
-                    val applItem = applListToUse[position]
-
-                    val bundle = Bundle()
-                    bundle.putString("applId", applItem.applId)
-
-                    applicantDetailsFragment.arguments = bundle
-
-                    val transaction = supportFragmentManager.beginTransaction()
-                    transaction.replace(R.id.fragmentContainer, applicantDetailsFragment)
-                    transaction.addToBackStack(null) // Optional: Add the transaction to the back stack
-                    transaction.commit()
-
                 } else {
                     Toast.makeText(
                         this@EmpApplicantsActivity,
-                        "Selected applicant details is not found.",
-                        Toast.LENGTH_SHORT
-                    ).show()
+                        "Unable to perform this action. Please check your network connection and try again.",
+                        Toast.LENGTH_LONG
+                    )
+                        .show()
                 }
             }
-
-
         })
-
         window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN)
     }
 

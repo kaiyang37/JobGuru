@@ -92,6 +92,16 @@
                     android:text="" />
 
                 <TextView
+                    android:id="@+id/interviewDate_errorMessage"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="30dp"
+                    android:layout_marginTop="5dp"
+                    android:text=""
+                    android:textColor="#FF0000"
+                    android:visibility="gone" />
+
+                <TextView
                     android:id="@+id/interview_time_title"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -115,12 +125,22 @@
                     android:text="" />
 
                 <TextView
+                    android:id="@+id/interviewTime_errorMessage"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="30dp"
+                    android:layout_marginTop="5dp"
+                    android:text=""
+                    android:textColor="#FF0000"
+                    android:visibility="gone" />
+
+                <TextView
                     android:id="@+id/interview_venue_title"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginHorizontal="30dp"
                     android:layout_marginTop="20dp"
-                    android:text="@string/interview_venue_title"
+                    android:text="@string/interview_venue_platform_title"
                     android:textSize="16sp"
                     android:textStyle="bold" />
 
@@ -153,11 +173,21 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginHorizontal="30dp"
-                    android:layout_marginVertical="10dp"
+                    android:layout_marginTop="5dp"
                     android:background="@drawable/rectangular_shape"
                     android:hint="@string/interviewer_name_field"
                     android:inputType="text"
                     android:padding="15dp" />
+
+                <TextView
+                    android:id="@+id/interviewerName_errorMessage"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="30dp"
+                    android:layout_marginTop="5dp"
+                    android:text=""
+                    android:textColor="#FF0000"
+                    android:visibility="gone" />
             </LinearLayout>
         </ScrollView>
 

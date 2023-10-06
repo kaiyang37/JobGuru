@@ -8,6 +8,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.ViewModelProvider
 import com.example.jobguru.R
@@ -36,12 +37,6 @@ class EmpApplicantDetailsFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         binding = FragmentEmpApplicantDetailsBinding.inflate(inflater, container, false)
-
-        //viewModel = ViewModelProvider(this).get(EmpApplicantDetailsViewModel::class.java)
-
-        val sharedPreferences =
-            requireContext().getSharedPreferences("MyPrefs", Context.MODE_PRIVATE)
-        val delimitedJobIds = sharedPreferences.getString("myJobIdList", "") ?: ""
         viewModel = ViewModelProvider(this).get(EmpApplicantDetailsViewModel::class.java)
 
         binding.upButton.setOnClickListener {
@@ -51,107 +46,142 @@ class EmpApplicantDetailsFragment : Fragment() {
 
 
         val applId = arguments?.getString("applId") ?: ""
+        val jobId = arguments?.getString("jobId") ?: ""
+        val appId = arguments?.getString("appId") ?: ""
+        val jobTitle = arguments?.getString("jobTitle") ?: ""
+        val empName = arguments?.getString("empName") ?: ""
         var applName = ""
+        var phoneNum = ""
         viewModel.getApplicantData(
             applId
         )
 
+        binding.tvJobTitle.text = jobTitle
         viewModel.applFirstName.observe(requireActivity(), { applFirstName ->
             viewModel.applLastName.observe(requireActivity(), { applLastName ->
                 binding.tvApplicantName.text = applFirstName + " " + applLastName
                 applName = applFirstName + " " + applLastName
-                //binding.tvJobTitle.text = applFirstName
-                //jTitle = applFirstName
             })
+        })
 
-            viewModel.applGender.observe(requireActivity(), { applGender ->
-                binding.tvApplicantGender.text = applGender
-                //jSpecialization = jobSpecialization
+        viewModel.applGender.observe(requireActivity(), { applGender ->
+            binding.tvApplicantGender.text = applGender
+        })
+        viewModel.applEmail.observe(requireActivity(), { applEmail ->
+            binding.tvApplicantEmail.text = applEmail
+        })
+        viewModel.applLiveIn.observe(requireActivity(), { applLiveIn ->
+            binding.tvApplicantLiveIn.text = applLiveIn
+        })
+        viewModel.applAreaCode.observe(requireActivity(), { applAreaCode ->
+            viewModel.applPhoneNumber.observe(requireActivity(), { applPhoneNumber ->
+                phoneNum = "+${applAreaCode?.replace(Regex("[^\\d]"), "")}" + " " + applPhoneNumber
+                binding.tvApplicantPhone.text = phoneNum
             })
-            viewModel.applEmail.observe(requireActivity(), { applEmail ->
-                binding.tvApplicantEmail.text = applEmail
-                //jYearOfExp = jobYearOfExp
+        })
+        viewModel.applNationality.observe(requireActivity(), { applNationality ->
+            binding.tvApplicantNationality.text = applNationality
+        })
+        viewModel.applMinimumMonthlySalary.observe(
+            requireActivity(),
+            { applMinimumMonthlySalary ->
+                binding.tvApplicantExpectedSalary.text =
+                    String.format("%.2f", applMinimumMonthlySalary)
             })
-            viewModel.applLiveIn.observe(requireActivity(), { applLiveIn ->
-                binding.tvApplicantLiveIn.text = applLiveIn
-                //jDesc = jobDesc
+        viewModel.applEducationLevel.observe(requireActivity(), { applEducationLevel ->
+            binding.tvApplicantEducationLvl.text = applEducationLevel
+        })
+        viewModel.applInstitute.observe(requireActivity(), { applInstitute ->
+            binding.tvApplicantInstitute.text = applInstitute
+        })
+        viewModel.applFieldOfStudies.observe(requireActivity(), { applFieldOfStudies ->
+            binding.tvApplicantFieldOfStudies.text = applFieldOfStudies
+        })
+        viewModel.applLocation.observe(requireActivity(), { applLocation ->
+            binding.tvApplicantInstituteLocation.text = applLocation
+        })
+
+        viewModel.applYearOfGraduation.observe(requireActivity(), { applYearOfGraduation ->
+            binding.tvApplicantYearOfGraduation.text = applYearOfGraduation
+        })
+        viewModel.applMonthOfGraduation.observe(
+            requireActivity(),
+            { applMonthOfGraduation ->
+                binding.tvApplicantMonthOfGraduation.text = applMonthOfGraduation
             })
-            viewModel.applAreaCode.observe(requireActivity(), { applAreaCode ->
-                viewModel.applPhoneNumber.observe(requireActivity(), { applPhoneNumber ->
-                    binding.tvApplicantPhone.text = applAreaCode + " " + applPhoneNumber
-                    //jWorkState = jobWorkState
-                })
-
-                viewModel.applNationality.observe(requireActivity(), { applNationality ->
-                    binding.tvApplicantNationality.text = applNationality
-                    // jMaxSalary = jobMaxSalary
-                })
-
-
-                viewModel.applMinimumMonthlySalary.observe(
-                    requireActivity(),
-                    { applMinimumMonthlySalary ->
-                        binding.tvApplicantExpectedSalary.text =
-                            String.format("%.2f", applMinimumMonthlySalary)
-                        //jYearOfExp = jobYearOfExp
+        viewModel.applInstitute.observe(requireActivity(), { applInstitute ->
+            binding.tvApplicantInstitute.text = applInstitute
+        })
+        viewModel.applFieldOfStudies.observe(requireActivity(), { applFieldOfStudies ->
+            binding.tvApplicantFieldOfStudies.text = applFieldOfStudies
+        })
+        viewModel.applLocation.observe(requireActivity(), { applLocation ->
+            binding.tvApplicantInstituteLocation.text = applLocation
+        })
+        viewModel.applJobTitle.observe(requireActivity(), { applJobTitle ->
+            viewModel.applCompanyName.observe(requireActivity(), { applCompanyName ->
+                viewModel.applStartDate.observe(requireActivity(), { applStartDate ->
+                    viewModel.applEndDate.observe(requireActivity(), { applEndDate ->
+                        viewModel.applCompanyIndustry.observe(
+                            requireActivity(),
+                            { applCompanyIndustry ->
+                                val areAllFieldsNull =
+                                    applJobTitle.isEmpty() && applCompanyName.isEmpty() &&
+                                            applStartDate.isEmpty() && applEndDate.isEmpty() &&
+                                            applCompanyIndustry.isEmpty()
+                                Log.e("My Tag", areAllFieldsNull.toString())
+                                if (areAllFieldsNull) {
+                                    binding.recentExpTitle.visibility = View.GONE
+                                    binding.recentExpLine1.visibility = View.GONE
+                                    binding.recentExpLine2.visibility = View.GONE
+                                    binding.recentExpLine3.visibility = View.GONE
+                                    binding.recentExpLine4.visibility = View.GONE
+                                    binding.recentExpLine5.visibility = View.GONE
+                                    binding.recentExpLine6.visibility = View.GONE
+                                    binding.recentExpLine7.visibility = View.GONE
+                                    binding.recentExpLine8.visibility = View.GONE
+                                    binding.tvApplicantPreviousCompanyIndustry.visibility =
+                                        View.GONE
+                                } else {
+                                    binding.tvApplicantPreviousJobTitle.text = applJobTitle
+                                    binding.tvApplicantPreviousCompanyName.text = applCompanyName
+                                    binding.tvApplicantPreviousJobStartDate.text = applStartDate
+                                    binding.tvApplicantPreviousJobEndDate.text = applEndDate
+                                    binding.tvApplicantPreviousCompanyIndustry.text =
+                                        applCompanyIndustry
+                                }
+                            })
                     })
-                viewModel.applEducationLevel.observe(requireActivity(), { applEducationLevel ->
-                    binding.tvApplicantEducationLvl.text = applEducationLevel
-                    //jDesc = jobDesc
                 })
-                viewModel.applInstitute.observe(requireActivity(), { applInstitute ->
-                    binding.tvApplicantInstitute.text = applInstitute
-                    //jWorkState = jobWorkState
-                })
-                viewModel.applFieldOfStudies.observe(requireActivity(), { applFieldOfStudies ->
-                    binding.tvApplicantFieldOfStudies.text = applFieldOfStudies
-                    // jMinSalary = jobMinSalary
-                })
-                viewModel.applLocation.observe(requireActivity(), { applLocation ->
-                    binding.tvApplicantInstituteLocation.text = applLocation
-                    // jMaxSalary = jobMaxSalary
-                })
-
-                viewModel.applYearOfGraduation.observe(requireActivity(), { applYearOfGraduation ->
-                    binding.tvApplicantYearOfGraduation.text = applYearOfGraduation
-                    //jYearOfExp = jobYearOfExp
-                })
-                viewModel.applMonthOfGraduation.observe(
-                    requireActivity(),
-                    { applMonthOfGraduation ->
-                        binding.tvApplicantMonthOfGraduation.text = applMonthOfGraduation
-                        //jDesc = jobDesc
-                    })
-                viewModel.applInstitute.observe(requireActivity(), { applInstitute ->
-                    binding.tvApplicantInstitute.text = applInstitute
-                    //jWorkState = jobWorkState
-                })
-                viewModel.applFieldOfStudies.observe(requireActivity(), { applFieldOfStudies ->
-                    binding.tvApplicantFieldOfStudies.text = applFieldOfStudies
-                    // jMinSalary = jobMinSalary
-                })
-                viewModel.applLocation.observe(requireActivity(), { applLocation ->
-                    binding.tvApplicantInstituteLocation.text = applLocation
-                    // jMaxSalary = jobMaxSalary
-                })
-
             })
         })
 
         binding.rejectBtn.setOnClickListener {
-            viewModel.rejectApplicant(applId, delimitedJobIds)
-            requireActivity().finish()
-            val intent = Intent(requireContext(), EmpJobsActivity::class.java)
-            startActivity(intent)
+            viewModel.rejectApplicant(appId, onSuccess = {
+                Toast.makeText(
+                    requireContext(),
+                    "$applName is rejected successfully",
+                    Toast.LENGTH_LONG
+                ).show()
+                requireActivity().finish()
+                val intent = Intent(requireContext(), EmpApplicantsActivity::class.java)
+                startActivity(intent)
+            },
+                onError = { errorMessage ->
+                    Toast.makeText(requireContext(), errorMessage, Toast.LENGTH_LONG).show()
+                })
         }
 
         binding.acceptBtn.setOnClickListener {
             val setInterviewFragment = EmpSetInterviewFragment()
 
             val bundle = Bundle()
+            bundle.putString("jobId", jobId)
             bundle.putString("applId", applId)
+            bundle.putString("appId", appId)
             bundle.putString("applName", applName)
-            bundle.putString("delimitedJobIds", delimitedJobIds)
+            bundle.putString("empName", empName)
+            bundle.putString("jobTitle", jobTitle)
 
             setInterviewFragment.arguments = bundle
 
