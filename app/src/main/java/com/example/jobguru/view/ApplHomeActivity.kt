@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.jobguru.R
 import com.example.jobguru.databinding.ActivityApplHomeBinding
 import com.example.jobguru.viewmodel.ApplFilterViewModel
+import com.example.jobguru.viewmodel.ApplJobsViewModelFactory
 import com.example.jobguru.viewmodel.ApplMainViewModel
 
 class ApplHomeActivity : AppCompatActivity() {
@@ -62,7 +63,7 @@ class ApplHomeActivity : AppCompatActivity() {
                 Log.d("MyApp", "Applicant ID: $observedApplId")
             }
 
-            filterViewModel = ViewModelProvider(this).get(ApplFilterViewModel::class.java)
+            filterViewModel = ViewModelProvider(this, ApplJobsViewModelFactory(this)).get(ApplFilterViewModel::class.java)
 
             binding.rvJob.layoutManager = LinearLayoutManager(this)
             binding.rvJob.setHasFixedSize(true)
@@ -95,29 +96,38 @@ class ApplHomeActivity : AppCompatActivity() {
 
             jAdapter.setOnItemClickListener(object : ApplJobAdapter.onItemClickListener {
                 override fun onItemClick(position: Int) {
-                    val jobListToUse =
-                        if (filterViewModel.filteredJobList.value != null && position < filterViewModel.filteredJobList.value!!.size) {
-                            filterViewModel.filteredJobList.value!!
+                    if(filterViewModel.isNetworkAvailable()) {
+                        val jobListToUse =
+                            if (filterViewModel.filteredJobList.value != null && position < filterViewModel.filteredJobList.value!!.size) {
+                                filterViewModel.filteredJobList.value!!
+                            } else {
+                                filterViewModel.jobList.value ?: emptyList()
+                            }
+
+                        if (position < jobListToUse.size) {
+                            val intent =
+                                Intent(this@ApplHomeActivity, ApplJobDetailsActivity::class.java)
+                            val jobItem = jobListToUse[position]
+
+                            intent.apply {
+                                putExtra("jobId", jobItem.jobId)
+                                putExtra("jobTitle", jobItem.jobTitle)
+                            }
+                            startActivity(intent)
                         } else {
-                            filterViewModel.jobList.value ?: emptyList()
+                            Toast.makeText(
+                                this@ApplHomeActivity,
+                                "Selected job details is not found.",
+                                Toast.LENGTH_SHORT
+                            ).show()
                         }
-
-                    if (position < jobListToUse.size) {
-                        val intent =
-                            Intent(this@ApplHomeActivity, ApplJobDetailsActivity::class.java)
-                        val jobItem = jobListToUse[position]
-
-                        intent.apply {
-                            putExtra("jobId", jobItem.jobId)
-                            putExtra("jobTitle", jobItem.jobTitle)
-                        }
-                        startActivity(intent)
-                    } else {
+                    }else{
                         Toast.makeText(
                             this@ApplHomeActivity,
-                            "Selected job details is not found.",
-                            Toast.LENGTH_SHORT
-                        ).show()
+                            "Unable to perform this action. Please check your network connection and try again.",
+                            Toast.LENGTH_LONG
+                        )
+                            .show()
                     }
                 }
 
