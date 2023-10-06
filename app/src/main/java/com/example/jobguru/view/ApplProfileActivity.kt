@@ -4,16 +4,20 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
+import android.widget.Button
+import android.widget.TextView
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.example.jobguru.R
 import com.example.jobguru.databinding.ActivityApplProfileBinding
-import com.example.jobguru.viewmodel.ApplSubmitApplicationViewModel
+import com.example.jobguru.viewmodel.ApplProfileViewModel
 
 class ApplProfileActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityApplProfileBinding
-    private lateinit var viewModel: ApplSubmitApplicationViewModel
+    private lateinit var viewModel: ApplProfileViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -21,14 +25,14 @@ class ApplProfileActivity : AppCompatActivity() {
         setContentView(binding.root)
         bottomNavigationBar()
 
-        viewModel = ViewModelProvider(this).get(ApplSubmitApplicationViewModel::class.java)
+        viewModel = ViewModelProvider(this).get(ApplProfileViewModel::class.java)
 
         val sharedPreferences = getSharedPreferences("MyPrefs", Context.MODE_PRIVATE)
         val loginEmail = sharedPreferences.getString("loginEmail", "")
-        if(loginEmail.isNullOrEmpty()){
+        if (loginEmail.isNullOrEmpty()) {
             binding.profileLogin.visibility = View.GONE
             binding.profileLogout.visibility = View.VISIBLE
-        } else{
+        } else {
             binding.profileLogin.visibility = View.VISIBLE
             binding.profileLogout.visibility = View.GONE
         }
@@ -38,7 +42,7 @@ class ApplProfileActivity : AppCompatActivity() {
             startActivity(intent)
         }
 
-        binding.logOutBtn.setOnClickListener{
+        binding.logOutBtn.setOnClickListener {
             val sharedPreferences = getSharedPreferences("MyPrefs", Context.MODE_PRIVATE)
             val editor = sharedPreferences.edit()
             editor.clear()
@@ -74,8 +78,18 @@ class ApplProfileActivity : AppCompatActivity() {
         }
 
         binding.manageProfileBtn.setOnClickListener {
-            val intent = Intent(this, ApplManageProfileActivity::class.java)
-            startActivity(intent)
+            if (applId != null) {
+                viewModel.checkApplProfileStatus(applId)
+            }
+
+            viewModel.applProfileStatus.observe(this) { isProfileEmpty ->
+                if (isProfileEmpty) {
+                    showCompleteProfileDialog()
+                } else {
+                    val intent = Intent(this, ApplManageProfileActivity::class.java)
+                    startActivity(intent)
+                }
+            }
         }
 
         binding.loginBtn.setOnClickListener {
@@ -86,6 +100,37 @@ class ApplProfileActivity : AppCompatActivity() {
         binding.signUpBtn.setOnClickListener {
             val intent = Intent(this, ApplSignUpActivity::class.java)
             startActivity(intent)
+        }
+    }
+
+    private fun replaceFragment(fragment: Fragment) {
+        val fragmentManager = supportFragmentManager
+        val fragmentTransaction = fragmentManager.beginTransaction()
+        fragmentTransaction.replace(R.id.frame_layout, fragment)
+        fragmentTransaction.commit()
+    }
+
+    private fun showCompleteProfileDialog() {
+        val completeProfileDialog = AlertDialog.Builder(this)
+        val inflater = layoutInflater
+        val completeProfileDialogView =
+            inflater.inflate(R.layout.appl_complete_profile_dialog, null)
+        val completeProfileBtn =
+            completeProfileDialogView.findViewById<Button>(R.id.completeProfileBtn)
+        val maybeLaterBtn = completeProfileDialogView.findViewById<TextView>(R.id.maybeLaterBtn)
+
+        completeProfileDialog.setView(completeProfileDialogView)
+
+        val alertDialog = completeProfileDialog.create()
+        alertDialog.show()
+
+        completeProfileBtn.setOnClickListener {
+            alertDialog.dismiss()
+            replaceFragment(ApplCompleteCurrentStatusFragment())
+        }
+
+        maybeLaterBtn.setOnClickListener {
+            alertDialog.dismiss()
         }
     }
 

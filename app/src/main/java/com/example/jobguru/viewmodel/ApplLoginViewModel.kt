@@ -7,8 +7,6 @@ import androidx.appcompat.app.AlertDialog
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.example.jobguru.model.ApplicantModel
-import com.example.jobguru.model.EmployerModel
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
@@ -71,14 +69,31 @@ class ApplLoginViewModel : ViewModel() {
     private val auth = FirebaseAuth.getInstance()
 
     fun applLogin(email: String, password: String, context: Context) {
-        auth.signInWithEmailAndPassword(email, password)
-            .addOnCompleteListener { task ->
-                if (task.isSuccessful) {
-                    _loginSuccess.value = true
+        val databaseReference = FirebaseDatabase.getInstance().getReference("Applicants")
+        val query = databaseReference.orderByChild("applEmail").equalTo(email)
+
+        query.addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onDataChange(dataSnapshot: DataSnapshot) {
+                if (!dataSnapshot.exists()) {
+                    _loginSuccess.value = false
                 } else {
-                    handleLoginError(task.exception, context)
+                    auth.signInWithEmailAndPassword(email, password)
+                        .addOnCompleteListener { task ->
+                            if (task.isSuccessful) {
+                                _loginSuccess.value = true
+                            } else {
+                                handleLoginError(task.exception, context)
+                            }
+                        }
+
                 }
             }
+
+            override fun onCancelled(databaseError: DatabaseError) {
+                //Handle Error
+            }
+        })
+
     }
 
     private fun handleLoginError(exception: Exception?, context: Context) {

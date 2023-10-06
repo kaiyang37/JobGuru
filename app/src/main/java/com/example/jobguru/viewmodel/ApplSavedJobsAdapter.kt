@@ -1,4 +1,4 @@
-package com.example.jobguru.view
+package com.example.jobguru.viewmodel
 
 import android.graphics.BitmapFactory
 import android.view.LayoutInflater
@@ -6,21 +6,15 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.recyclerview.widget.RecyclerView
 import com.example.jobguru.R
-import com.example.jobguru.model.JobModel
-import com.google.firebase.database.DataSnapshot
-import com.google.firebase.database.DatabaseError
-import com.google.firebase.database.FirebaseDatabase
-import com.google.firebase.database.ValueEventListener
+import com.example.jobguru.model.SaveJobModel
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
 import java.io.File
 
-class ApplJobAdapter(private var jobList: ArrayList<JobModel>) :
-    RecyclerView.Adapter<ApplJobAdapter.ViewHolder>() {
+class ApplSavedJobsAdapter(private var saveJobList: ArrayList<SaveJobModel>) :
+    RecyclerView.Adapter<ApplSavedJobsAdapter.ViewHolder>() {
 
     private lateinit var jListener: onItemClickListener
 
@@ -29,9 +23,9 @@ class ApplJobAdapter(private var jobList: ArrayList<JobModel>) :
     }
 
     // Update setData function to accept filtered list
-    fun setData(jobList: List<JobModel>) {
-        this.jobList.clear() // Clear the existing data
-        this.jobList.addAll(jobList) // Add all elements from the provided list
+    fun setData(saveJobList: List<SaveJobModel>) {
+        this.saveJobList.clear() // Clear the existing data
+        this.saveJobList.addAll(saveJobList) // Add all elements from the provided list
         notifyDataSetChanged()
     }
 
@@ -45,7 +39,7 @@ class ApplJobAdapter(private var jobList: ArrayList<JobModel>) :
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val currentJob = jobList[position]
+        val currentJob = saveJobList[position]
         holder.tvJobTitle.text = currentJob.jobTitle
         holder.tvJobWorkState.text = currentJob.jobWorkState
         holder.tvJobMinSalary.text = String.format("%.2f", currentJob.jobMinSalary)
@@ -63,7 +57,7 @@ class ApplJobAdapter(private var jobList: ArrayList<JobModel>) :
     }
 
     override fun getItemCount(): Int {
-        return jobList.size
+        return saveJobList.size
     }
 
     class ViewHolder(itemView: View, clickListener: onItemClickListener) : RecyclerView.ViewHolder(itemView) {

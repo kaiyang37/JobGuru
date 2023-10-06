@@ -76,6 +76,19 @@
                     android:paddingHorizontal="20dp"
                     android:paddingVertical="25dp">
 
+                    <com.google.android.material.imageview.ShapeableImageView
+                        android:id="@+id/tvJobCompanyLogoImage"
+                        android:layout_width="match_parent"
+                        android:layout_height="50dp"
+                        android:layout_gravity="top"
+                        android:scaleType="fitStart"
+                        android:layout_marginBottom="10dp"
+                        android:src="@drawable/resource_default"
+                        app:layout_constraintBottom_toTopOf="@id/jobContent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"/>
+
                     <TextView
                         android:id="@+id/tvJobTitle"
                         android:layout_width="wrap_content"
@@ -257,8 +270,8 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginBottom="10dp"
                         android:text="Company Details"
+                        android:layout_marginBottom="10dp"
                         android:textSize="16sp"
                         android:textStyle="bold" />
 
@@ -267,55 +280,69 @@
                         android:layout_height="wrap_content"
                         android:text="Company Name"
                         android:textSize="14sp"
-                        android:textStyle="bold" />
+                        android:textStyle="bold"/>
 
                     <TextView
                         android:id="@+id/tvMainJobCompanyName"
                         android:layout_width="wrap_content"
+                        android:layout_marginBottom="10dp"
                         android:layout_height="wrap_content"
                         android:text=""
-                        android:textSize="12sp" />
+                        android:textSize="12sp"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Company Email"
+                        android:textSize="14sp"
+                        android:textStyle="bold"/>
+
+                    <TextView
+                        android:id="@+id/tvJobCompanyEmail"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text=""
+                        android:textSize="12sp"/>
                 </LinearLayout>
             </LinearLayout>
         </ScrollView>
-
         <LinearLayout
             android:id="@+id/actionButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="#D9D9D9"
             android:orientation="horizontal"
+            android:background="#D9D9D9"
             android:paddingVertical="10sp"
-            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent">
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent">
 
             <LinearLayout
                 android:id="@+id/saveBtn"
                 android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_marginStart="20dp"
-                android:layout_marginEnd="5dp"
                 android:layout_weight="1"
+                android:layout_height="match_parent"
+                android:orientation="horizontal"
                 android:background="@drawable/blank_button"
+                android:gravity="center"
                 android:clickable="true"
                 android:focusable="false"
-                android:gravity="center"
-                android:orientation="horizontal">
+                android:layout_marginStart="20dp"
+                android:layout_marginEnd="5dp">
 
                 <ImageView
                     android:layout_width="24dp"
                     android:layout_height="24dp"
-                    android:layout_marginEnd="5dp"
+                    app:tint="@color/theme"
                     android:backgroundTint="@null"
-                    android:src="@drawable/ic_saved_jobs_border"
-                    app:tint="@color/theme" />
+                    android:layout_marginEnd="5dp"
+                    android:src="@drawable/ic_saved_jobs_border" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginEnd="10dp"
                     android:text="Save"
+                    android:layout_marginEnd="10dp"
                     android:textColor="@color/theme"
                     android:textSize="18sp"
                     android:textStyle="bold" />
@@ -324,30 +351,29 @@
             <LinearLayout
                 android:id="@+id/savedBtn"
                 android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_marginStart="20dp"
-                android:layout_marginEnd="5dp"
                 android:layout_weight="1"
+                android:layout_height="match_parent"
+                android:orientation="horizontal"
                 android:background="@drawable/blank_button"
+                android:gravity="center"
                 android:clickable="true"
                 android:focusable="false"
-                android:gravity="center"
-                android:orientation="horizontal"
-                android:visibility="gone">
+                android:layout_marginStart="20dp"
+                android:layout_marginEnd="5dp">
 
                 <ImageView
                     android:layout_width="24dp"
                     android:layout_height="24dp"
-                    android:layout_marginEnd="5dp"
+                    app:tint="@color/theme"
                     android:backgroundTint="@null"
-                    android:src="@drawable/ic_saved_jobs"
-                    app:tint="@color/theme" />
+                    android:layout_marginEnd="5dp"
+                    android:src="@drawable/ic_saved_jobs" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginEnd="10dp"
                     android:text="Saved"
+                    android:layout_marginEnd="10dp"
                     android:textColor="@color/theme"
                     android:textSize="18sp"
                     android:textStyle="bold" />
@@ -356,11 +382,11 @@
             <Button
                 android:id="@+id/applyNowBtn"
                 android:layout_width="0dp"
+                android:layout_weight="1"
                 android:layout_height="wrap_content"
+                android:background="@drawable/filled_button"
                 android:layout_marginStart="5dp"
                 android:layout_marginEnd="20dp"
-                android:layout_weight="1"
-                android:background="@drawable/filled_button"
                 android:text="Apply Now"
                 android:textSize="18sp"
                 android:textStyle="bold"
@@ -368,20 +394,19 @@
 
             <Button
                 android:id="@+id/appliedBtn"
+                android:visibility="gone"
                 android:layout_width="0dp"
+                android:layout_weight="1"
                 android:layout_height="wrap_content"
+                android:background="@drawable/grayed_button"
                 android:layout_marginStart="5dp"
                 android:layout_marginEnd="20dp"
-                android:layout_weight="1"
-                android:background="@drawable/grayed_button"
-                android:clickable="false"
                 android:text="Applied"
                 android:textSize="18sp"
                 android:textStyle="bold"
-                android:visibility="gone"
-                app:backgroundTint="@null" />
+                app:backgroundTint="@null"
+                android:clickable="false" />
         </LinearLayout>
-
         <FrameLayout
             android:id="@+id/frame_layout"
             android:layout_width="match_parent"

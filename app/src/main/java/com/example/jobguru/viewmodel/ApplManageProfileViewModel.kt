@@ -8,12 +8,16 @@ import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
+import java.text.DecimalFormat
 
 class ApplManageProfileViewModel : ViewModel() {
+    private val _applFirstName = MutableLiveData<String>()
+    val applFirstName: LiveData<String>
+        get() = _applFirstName
 
-    private val _applName = MutableLiveData<String>()
-    val applName: LiveData<String>
-        get() = _applName
+    private val _applLastName = MutableLiveData<String>()
+    val applLastName: LiveData<String>
+        get() = _applLastName
 
     private val _applGender = MutableLiveData<String>()
     val applGender: LiveData<String>
@@ -22,6 +26,10 @@ class ApplManageProfileViewModel : ViewModel() {
     private val _applEmail = MutableLiveData<String>()
     val applEmail: LiveData<String>
         get() = _applEmail
+
+    private val _applAreaCode = MutableLiveData<String>()
+    val applAreaCode: LiveData<String>
+        get() = _applAreaCode
 
     private val _applPhoneNum = MutableLiveData<String>()
     val applPhoneNum: LiveData<String>
@@ -97,19 +105,28 @@ class ApplManageProfileViewModel : ViewModel() {
                 if (snapshot.exists()) {
                     val applData = snapshot.children.first().getValue(ApplicantModel::class.java)
                     _applGender.value = applData?.applGender
-                    _applName.value = applData?.applFirstName + " " + applData?.applLastName
+                    _applFirstName.value = applData?.applFirstName
+                    _applLastName.value = applData?.applLastName
                     _applEmail.value = applData?.applEmail
-                    _applPhoneNum.value = "+${applData?.applAreaCode?.replace(Regex("[^\\d]"), "")}"
-                    _applPhoneNum.value = _applPhoneNum.value + " " + applData?.applPhoneNumber
+                    _applAreaCode.value = applData?.applAreaCode
+                    _applPhoneNum.value = applData?.applPhoneNumber
+                    _applJobTitle.value = applData?.applJobTitle
                     _applCompanyName.value = applData?.applCompanyName
                     _applStartDate.value = applData?.applStartDate
                     _applEndDate.value = applData?.applEndDate
+                    _applCompanyIndustry.value = applData?.applCompanyIndustry
                     _applInstitute.value = applData?.applInstitute
+                    _applLocation.value = applData?.applLocation
                     _applYearOfGraduation.value = applData?.applYearOfGraduation
-                    _applEducationLevel.value = applData?.applEducationLevel + " in " + applData?.applFieldOfStudies
+                    _applMonthOfGraduation.value = applData?.applMonthOfGraduation
+                    _applEducationLevel.value = applData?.applEducationLevel
+                    _applFieldOfStudies.value = applData?.applFieldOfStudies
                     _applLiveIn.value = applData?.applLiveIn
                     _applNationality.value = applData?.applNationality
-                    _applExpectedSalary.value = "MYR " + applData?.applMinimumMonthlySalary
+                    val salary = applData?.applMinimumMonthlySalary ?: 0.0 // Replace 0.0 with the default value you want
+                    val decimalFormat = DecimalFormat("#") // Format to display with no decimal places
+                    val formattedSalary = decimalFormat.format(salary)
+                    _applExpectedSalary.value = "MYR $formattedSalary"
                 }
             }
 

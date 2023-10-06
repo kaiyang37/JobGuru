@@ -1,12 +1,11 @@
-<?xml version="1.0" encoding="utf-8"?>
 <layout>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:background="@color/white"
-    android:layout_height="match_parent"
-    tools:context=".view.ApplApplicationHistoryActivity">
+    <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/white"
+        tools:context=".view.ApplApplicationHistoryActivity">
 
         <LinearLayout
             android:id="@+id/topPart"
@@ -53,47 +52,10 @@
                 android:background="#EAEAEA" />
         </LinearLayout>
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/white"
-            android:orientation="vertical"
-            android:visibility="gone"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/topPart">
-
-            <ImageView
-                android:layout_width="776px"
-                android:layout_height="756px"
-                android:layout_gravity="center"
-                android:paddingLeft="5dp"
-                android:paddingRight="5dp"
-                android:src="@drawable/application_history" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:text="Your application history"
-                android:textColor="@color/black"
-                android:textSize="18sp"
-                android:textStyle="bold" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:text="See the jobs you've applied for"
-                android:textColor="@color/black"
-                android:textSize="16sp" />
-
-        </LinearLayout>
-
         <ScrollView
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:background="#D9D9D9"
+            android:background="#d9d9d9"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -108,252 +70,51 @@
                     android:id="@+id/rvJob"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="20dp"
+                    android:layout_marginBottom="25dp"
                     tools:listitem="@layout/application_history_list_item" />
+            </LinearLayout>
+        </ScrollView>
 
-<!--                <androidx.cardview.widget.CardView-->
-<!--                    android:layout_width="match_parent"-->
-<!--                    android:layout_height="wrap_content"-->
-<!--                    android:layout_marginHorizontal="15dp"-->
-<!--                    android:layout_marginTop="25dp"-->
-<!--                    android:background="@color/white"-->
-<!--                    android:clickable="true"-->
-<!--                    android:focusable="true"-->
-<!--                    app:cardCornerRadius="2dp"-->
-<!--                    app:cardElevation="4dp">-->
+        <ScrollView
+            android:id="@+id/emptyAppHistory"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:background="@color/white"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/topPart">
 
-<!--                    <androidx.constraintlayout.widget.ConstraintLayout-->
-<!--                        android:layout_width="match_parent"-->
-<!--                        android:layout_height="wrap_content"-->
-<!--                        android:layout_gravity="center_vertical"-->
-<!--                        android:orientation="horizontal"-->
-<!--                        android:paddingHorizontal="20dp">-->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
 
-<!--                        <LinearLayout-->
-<!--                            android:layout_width="match_parent"-->
-<!--                            android:layout_height="wrap_content"-->
-<!--                            android:orientation="vertical"-->
-<!--                            android:paddingVertical="25dp"-->
+                <ImageView
+                    android:layout_width="776px"
+                    android:layout_height="756px"
+                    android:layout_gravity="center"
+                    android:paddingLeft="5dp"
+                    android:paddingRight="5dp"
+                    android:src="@drawable/application_history" />
 
-<!--                            app:layout_constraintBottom_toBottomOf="parent"-->
-<!--                            app:layout_constraintEnd_toStartOf="@id/icon_image_view"-->
-<!--                            app:layout_constraintStart_toStartOf="parent"-->
-<!--                            app:layout_constraintTop_toTopOf="parent">-->
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:text="Your application history"
+                    android:textColor="@color/black"
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
 
-<!--                            <TextView-->
-<!--                                android:layout_width="wrap_content"-->
-<!--                                android:layout_height="wrap_content"-->
-<!--                                android:text="Accounts Executive"-->
-<!--                                android:textSize="16sp"-->
-<!--                                android:textStyle="bold" />-->
-
-<!--                            <TextView-->
-<!--                                android:layout_width="wrap_content"-->
-<!--                                android:layout_height="wrap_content"-->
-<!--                                android:layout_marginBottom="10dp"-->
-<!--                                android:text="Gabungan AQRS Berhad"-->
-<!--                                android:textSize="12sp" />-->
-
-<!--                            <TextView-->
-<!--                                android:layout_width="wrap_content"-->
-<!--                                android:layout_height="wrap_content"-->
-<!--                                android:text="Petaling Jaya"-->
-<!--                                android:textSize="12sp"-->
-<!--                                android:textStyle="bold" />-->
-
-<!--                            <LinearLayout-->
-<!--                                android:layout_width="wrap_content"-->
-<!--                                android:layout_height="wrap_content"-->
-<!--                                android:layout_marginTop="10dp"-->
-<!--                                android:orientation="horizontal">-->
-
-<!--                                <ImageView-->
-<!--                                    android:layout_width="wrap_content"-->
-<!--                                    android:layout_height="wrap_content"-->
-<!--                                    android:layout_marginEnd="5dp"-->
-<!--                                    android:backgroundTint="@null"-->
-<!--                                    android:src="@drawable/ic_accepted"-->
-<!--                                    app:tint="#566C54" />-->
-
-<!--                                <TextView-->
-<!--                                    android:layout_width="wrap_content"-->
-<!--                                    android:layout_height="match_parent"-->
-<!--                                    android:layout_gravity="center"-->
-<!--                                    android:gravity="center"-->
-<!--                                    android:text="Accepted"-->
-<!--                                    android:textColor="#566C54"-->
-<!--                                    android:textSize="16sp"-->
-<!--                                    android:textStyle="bold" />-->
-<!--                            </LinearLayout>-->
-
-<!--                        </LinearLayout>-->
-<!--                        &lt;!&ndash; ImageView for the icon &ndash;&gt;-->
-<!--                        <ImageView-->
-<!--                            android:id="@+id/icon_image_view"-->
-<!--                            android:layout_width="24dp"-->
-<!--                            android:layout_height="24dp"-->
-<!--                            android:src="@drawable/ic_calendar"-->
-<!--                            app:layout_constraintBottom_toBottomOf="parent"-->
-<!--                            app:layout_constraintEnd_toEndOf="parent"-->
-<!--                            app:layout_constraintTop_toTopOf="parent" />-->
-<!--                    </androidx.constraintlayout.widget.ConstraintLayout>-->
-<!--                </androidx.cardview.widget.CardView>-->
-
-<!--                <androidx.cardview.widget.CardView-->
-<!--                    android:layout_width="match_parent"-->
-<!--                    android:layout_height="wrap_content"-->
-<!--                    android:layout_marginHorizontal="15dp"-->
-<!--                    android:layout_marginTop="25dp"-->
-<!--                    android:background="@color/white"-->
-<!--                    android:clickable="true"-->
-<!--                    android:focusable="true"-->
-<!--                    app:cardCornerRadius="2dp"-->
-<!--                    app:cardElevation="4dp">-->
-
-<!--                    <androidx.constraintlayout.widget.ConstraintLayout-->
-<!--                        android:layout_width="match_parent"-->
-<!--                        android:layout_height="wrap_content"-->
-<!--                        android:layout_gravity="center_vertical"-->
-<!--                        android:orientation="horizontal"-->
-<!--                        android:paddingHorizontal="20dp">-->
-
-<!--                        <LinearLayout-->
-<!--                            android:layout_width="match_parent"-->
-<!--                            android:layout_height="wrap_content"-->
-<!--                            android:orientation="vertical"-->
-<!--                            android:paddingVertical="25dp"-->
-
-<!--                            app:layout_constraintBottom_toBottomOf="parent"-->
-<!--                            app:layout_constraintEnd_toStartOf="parent"-->
-<!--                            app:layout_constraintStart_toStartOf="parent"-->
-<!--                            app:layout_constraintTop_toTopOf="parent">-->
-
-<!--                            <TextView-->
-<!--                                android:layout_width="wrap_content"-->
-<!--                                android:layout_height="wrap_content"-->
-<!--                                android:text="Accounts Executive"-->
-<!--                                android:textSize="16sp"-->
-<!--                                android:textStyle="bold" />-->
-
-<!--                            <TextView-->
-<!--                                android:layout_width="wrap_content"-->
-<!--                                android:layout_height="wrap_content"-->
-<!--                                android:layout_marginBottom="10dp"-->
-<!--                                android:text="Gabungan AQRS Berhad"-->
-<!--                                android:textSize="12sp" />-->
-
-<!--                            <TextView-->
-<!--                                android:layout_width="wrap_content"-->
-<!--                                android:layout_height="wrap_content"-->
-<!--                                android:text="Petaling Jaya"-->
-<!--                                android:textSize="12sp"-->
-<!--                                android:textStyle="bold" />-->
-
-<!--                            <LinearLayout-->
-<!--                                android:layout_width="wrap_content"-->
-<!--                                android:layout_height="wrap_content"-->
-<!--                                android:layout_marginTop="10dp"-->
-<!--                                android:orientation="horizontal">-->
-
-<!--                                <ImageView-->
-<!--                                    android:layout_width="wrap_content"-->
-<!--                                    android:layout_height="wrap_content"-->
-<!--                                    android:layout_marginEnd="5dp"-->
-<!--                                    android:backgroundTint="@null"-->
-<!--                                    android:src="@drawable/ic_rejected"-->
-<!--                                    app:tint="#980E30" />-->
-
-<!--                                <TextView-->
-<!--                                    android:layout_width="wrap_content"-->
-<!--                                    android:layout_height="match_parent"-->
-<!--                                    android:layout_gravity="center"-->
-<!--                                    android:gravity="center"-->
-<!--                                    android:text="Rejected"-->
-<!--                                    android:textColor="#980E30"-->
-<!--                                    android:textSize="16sp"-->
-<!--                                    android:textStyle="bold" />-->
-<!--                            </LinearLayout>-->
-<!--                        </LinearLayout>-->
-<!--                    </androidx.constraintlayout.widget.ConstraintLayout>-->
-<!--                </androidx.cardview.widget.CardView>-->
-
-<!--                <androidx.cardview.widget.CardView-->
-<!--                    android:layout_width="match_parent"-->
-<!--                    android:layout_height="wrap_content"-->
-<!--                    android:layout_marginHorizontal="15dp"-->
-<!--                    android:layout_marginTop="25dp"-->
-<!--                    android:background="@color/white"-->
-<!--                    android:clickable="true"-->
-<!--                    android:focusable="true"-->
-<!--                    app:cardCornerRadius="2dp"-->
-<!--                    app:cardElevation="4dp">-->
-
-<!--                    <androidx.constraintlayout.widget.ConstraintLayout-->
-<!--                        android:layout_width="match_parent"-->
-<!--                        android:layout_height="wrap_content"-->
-<!--                        android:layout_gravity="center_vertical"-->
-<!--                        android:orientation="horizontal"-->
-<!--                        android:paddingHorizontal="20dp">-->
-
-<!--                        <LinearLayout-->
-<!--                            android:layout_width="match_parent"-->
-<!--                            android:layout_height="wrap_content"-->
-<!--                            android:orientation="vertical"-->
-<!--                            android:paddingVertical="25dp"-->
-
-<!--                            app:layout_constraintBottom_toBottomOf="parent"-->
-<!--                            app:layout_constraintEnd_toStartOf="parent"-->
-<!--                            app:layout_constraintStart_toStartOf="parent"-->
-<!--                            app:layout_constraintTop_toTopOf="parent">-->
-
-<!--                            <TextView-->
-<!--                                android:layout_width="wrap_content"-->
-<!--                                android:layout_height="wrap_content"-->
-<!--                                android:text="Accounts Executive"-->
-<!--                                android:textSize="16sp"-->
-<!--                                android:textStyle="bold" />-->
-
-<!--                            <TextView-->
-<!--                                android:layout_width="wrap_content"-->
-<!--                                android:layout_height="wrap_content"-->
-<!--                                android:layout_marginBottom="10dp"-->
-<!--                                android:text="Gabungan AQRS Berhad"-->
-<!--                                android:textSize="12sp" />-->
-
-<!--                            <TextView-->
-<!--                                android:layout_width="wrap_content"-->
-<!--                                android:layout_height="wrap_content"-->
-<!--                                android:text="Petaling Jaya"-->
-<!--                                android:textSize="12sp"-->
-<!--                                android:textStyle="bold" />-->
-
-<!--                            <LinearLayout-->
-<!--                                android:layout_width="wrap_content"-->
-<!--                                android:layout_height="wrap_content"-->
-<!--                                android:layout_marginTop="10dp"-->
-<!--                                android:orientation="horizontal">-->
-
-<!--                                <ImageView-->
-<!--                                    android:layout_width="wrap_content"-->
-<!--                                    android:layout_height="wrap_content"-->
-<!--                                    android:layout_marginEnd="5dp"-->
-<!--                                    android:backgroundTint="@null"-->
-<!--                                    android:src="@drawable/ic_pending"-->
-<!--                                    app:tint="#9E9E9E" />-->
-
-<!--                                <TextView-->
-<!--                                    android:layout_width="wrap_content"-->
-<!--                                    android:layout_height="match_parent"-->
-<!--                                    android:layout_gravity="center"-->
-<!--                                    android:gravity="center"-->
-<!--                                    android:text="Pending"-->
-<!--                                    android:textColor="#9E9E9E"-->
-<!--                                    android:textSize="16sp"-->
-<!--                                    android:textStyle="bold" />-->
-<!--                            </LinearLayout>-->
-<!--                        </LinearLayout>-->
-<!--                    </androidx.constraintlayout.widget.ConstraintLayout>-->
-<!--                </androidx.cardview.widget.CardView>-->
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:text="See the jobs you've applied for"
+                    android:textColor="@color/black"
+                    android:textSize="16sp" />
             </LinearLayout>
         </ScrollView>
 
